@@ -4,11 +4,13 @@ import Home from './views/Home'
 import Login from './views/Login'
 import Signup from './views/Signup'
 import NotFound from './views/NotFound'
+import Navbar from './views/_layout/Navbar'
 
 function App() {
 
   return (
     <Router>
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/login" element={<Login />}/>

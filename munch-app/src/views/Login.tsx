@@ -50,7 +50,7 @@ const Login = () => {
                             required
                         />
                     </div>
-                    <button type="submit">Sign Up</button>
+                    <button type="submit">Login</button>
                 </form>
             </div>
         </div>
