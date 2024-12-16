@@ -10,8 +10,8 @@ class RecipeService:
     
     @staticmethod
     def get_recipe_by_id(recipe_id: int) -> Optional[dict]:
-        recipe = Recipe.query.get_or_404(recipe_id)
-        return recipe.to_dict()
+        recipe: Recipe = Recipe.query.get(recipe_id)
+        return recipe.to_dict() if recipe else None
     
     @staticmethod
     def create_recipe(recipe_data: dict) -> dict:
@@ -29,7 +29,9 @@ class RecipeService:
     
     @staticmethod
     def update_recipe(recipe_id: int, recipe_data: dict) -> dict:
-        recipe = Recipe.query.get_or_404(recipe_id)
+        recipe: Recipe = Recipe.query.get(recipe_id)
+        if not recipe: return recipe
+
         recipe.title = recipe_data.get('title', recipe.title)
         recipe.instructions = recipe_data.get('instructions', recipe.description)
         recipe.author = recipe_data.get('author', recipe.author)
@@ -40,7 +42,8 @@ class RecipeService:
     
     @staticmethod
     def delete_recipe(recipe_id: int) -> bool:
-        recipe = Recipe.query.get_or_404(recipe_id)
+        recipe = Recipe.query.get(recipe_id)
+        if not recipe: return recipe
         db.session.delete(recipe)
         db.session.commit()
         return True

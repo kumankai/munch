@@ -4,8 +4,9 @@ from typing import List, Optional
 
 class UserService:
     @staticmethod
-    def get_user_by_user_id(user_id: int) -> User:
-        return User.query.get_or_404(user_id)
+    def get_user_by_user_id(user_id: int) -> dict:
+        user = User.query.get(user_id)
+        return user.to_dict() if user else None
     
     @staticmethod
     def get_all_users() -> List[User]:
@@ -24,7 +25,9 @@ class UserService:
     
     @staticmethod
     def update_user(user_id: int, user_data: dict) -> User:
-        user = User.query.get_or_404(user_id)
+        user = User.query.get(user_id)
+        if not user: return user
+
         user.username = user_data.get('username', user.username)
         user.password = user_data.get('password', user.password)
 
@@ -33,7 +36,8 @@ class UserService:
 
     @staticmethod
     def delete_user(user_id: int) -> bool:
-        user = User.query.get_or_404(user_id)
+        user = User.query.get(user_id)
+        if not user: return user
         db.session.delete(user)
         db.session.commit()
         return True
