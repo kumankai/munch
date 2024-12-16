@@ -19,3 +19,9 @@ def create_recipe():
     recipe_data = request.get_json()
     recipe = recipe_service.create_recipe(recipe_data)
     return jsonify({ 'recipe' : recipe })
+
+@recipes.route('/recipes/update/<int:recipe_id>', methods=['POST'])
+def update_recipe(recipe_id):
+    recipe_data = request.get_json()
+    new_recipe = recipe_service.update_recipe(recipe_id, recipe_data)
+    return jsonify({ 'recipe': new_recipe })

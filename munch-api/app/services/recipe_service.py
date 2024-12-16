@@ -33,7 +33,7 @@ class RecipeService:
         if not recipe: return recipe
 
         recipe.title = recipe_data.get('title', recipe.title)
-        recipe.instructions = recipe_data.get('instructions', recipe.description)
+        recipe.instructions = recipe_data.get('instructions', recipe.instructions)
         recipe.author = recipe_data.get('author', recipe.author)
         recipe.image_url = recipe_data.get('image_url', recipe.image_url)
         
