@@ -7,9 +7,10 @@ user_service = UserService()
 
 class AuthService:
     @staticmethod
-    def login(username: str, password: str) -> Optional[User]:
+    def login(user_data: User) -> Optional[dict]:
+        username, password = user_data['username'], user_data['password']
         user = User.query.filter_by(username=username).first()
-        if not user or user['username'] != password:
+        if not user or user.password != password:
             return None
         
         return user.to_dict()
