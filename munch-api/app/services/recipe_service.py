@@ -12,26 +12,29 @@ class RecipeService:
         return Recipe.query.get_or_404(recipe_id)
     
     @staticmethod
-    def create_recipe(recipe_data: dict) -> Recipe:
+    def create_recipe(recipe_data: dict) -> dict:
         new_recipe = Recipe(
             title=recipe_data['title'],
-            description=recipe_data['description'],
+            instructions=recipe_data['instructions'],
+            author=recipe_data['author'],
             image_url=recipe_data.get('image_url'),
             user_id=recipe_data['user_id']
         )
+
         db.session.add(new_recipe)
         db.session.commit()
-        return new_recipe
+        return new_recipe.to_dict()
     
     @staticmethod
-    def update_recipe(recipe_id: int, recipe_data: dict) -> Recipe:
+    def update_recipe(recipe_id: int, recipe_data: dict) -> dict:
         recipe = Recipe.query.get_or_404(recipe_id)
         recipe.title = recipe_data.get('title', recipe.title)
-        recipe.description = recipe_data.get('description', recipe.description)
+        recipe.instructions = recipe_data.get('instructions', recipe.description)
+        recipe.author = recipe_data.get('author', recipe.author)
         recipe.image_url = recipe_data.get('image_url', recipe.image_url)
         
         db.session.commit()
-        return recipe
+        return recipe.to_dict()
     
     @staticmethod
     def delete_recipe(recipe_id: int) -> bool:

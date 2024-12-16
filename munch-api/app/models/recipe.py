@@ -5,7 +5,7 @@ class Recipe(db.Model):
     title = db.Column(db.String(100), nullable=False)
     instructions = db.Column(db.Text, nullable=False)
     author = db.Column(db.String(64), nullable=False)
-    imageUrl = db.Column(db.String(255), nullable=False)
+    image_url = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
@@ -17,6 +17,6 @@ class Recipe(db.Model):
             'title': self.title,
             'instructions': self.instructions,
             'author': self.author,
-            'imageUrl': self.imageUrl,
+            'image_url': self.image_url,
             'user_id': self.user_id
         }
