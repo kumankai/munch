@@ -4,12 +4,14 @@ from typing import List, Optional
 
 class RecipeService:
     @staticmethod
-    def get_all_recipes_by_user_id(user_id: int) -> List[Recipe]:
-        return Recipe.query.filter_by(user_id=user_id).all()
+    def get_all_recipes_by_user_id(user_id: int) -> List[dict]:
+        recipes = [recipe.to_dict() for recipe in Recipe.query.filter_by(user_id=user_id).all()]
+        return recipes
     
     @staticmethod
-    def get_recipe_by_id(recipe_id: int) -> Optional[Recipe]:
-        return Recipe.query.get_or_404(recipe_id)
+    def get_recipe_by_id(recipe_id: int) -> Optional[dict]:
+        recipe = Recipe.query.get_or_404(recipe_id)
+        return recipe.to_dict()
     
     @staticmethod
     def create_recipe(recipe_data: dict) -> dict:

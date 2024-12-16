@@ -6,7 +6,8 @@ recipe_service = RecipeService()
 
 @recipes.route('/recipes/<int:user_id>', methods=['GET'])
 def get_user_recipes(user_id):
-    return 'List of all recipes'
+    recipes = recipe_service.get_all_recipes_by_user_id(user_id)
+    return jsonify({ 'recipes' : recipes })
 
 @recipes.route('/recipes/<int:user_id>', methods=['GET'])
 def get_recipe(user_id):
@@ -16,4 +17,4 @@ def get_recipe(user_id):
 def create_recipe():
     recipe_data = request.get_json()
     recipe = recipe_service.create_recipe(recipe_data)
-    return jsonify({ 'recipe': recipe })
+    return jsonify({ 'recipe' : recipe })
