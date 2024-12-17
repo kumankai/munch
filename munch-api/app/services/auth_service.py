@@ -4,8 +4,6 @@ from typing import Optional
 from app.services.user_service import UserService
 import hashlib
 
-user_service = UserService()
-
 class AuthService:
     @staticmethod
     def login(user_data: User) -> Optional[dict]:
@@ -26,7 +24,7 @@ class AuthService:
         hashed_pwd.update(user_data['password'].encode())
         user_data['password'] = hashed_pwd.hexdigest()
 
-        user: dict = user_service.create_user(user_data)
+        user: dict = UserService.create_user(user_data)
         return user
 
     @staticmethod
