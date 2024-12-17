@@ -17,7 +17,3 @@ def update():
     user_data = request.get_json()
     new_user = UserService.update_user(user_data)
     return jsonify({ 'user': new_user })
-
-@user.route('/user/all', methods=['GET'])
-def all():
-    return UserService.get_all_users()

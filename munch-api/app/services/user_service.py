@@ -7,11 +7,6 @@ class UserService:
     def get_user_by_user_id(user_id: int) -> dict:
         user: User = User.query.get(user_id)
         return user.to_dict() if user else None
-    
-    @staticmethod
-    def get_all_users() -> Optional[List[dict]]:
-        users: List[User] = User.query.all()
-        return [user.to_dict() for user in users]
 
     @staticmethod
     def create_user(user_data: dict) -> dict:
