@@ -2,6 +2,7 @@ from app.models.user import User
 from app.extensions import db
 from typing import Optional
 from app.services.user_service import UserService
+import hashlib
 
 user_service = UserService()
 
@@ -19,7 +20,13 @@ class AuthService:
     def register(user_data: User) -> Optional[dict]:
         if AuthService.checkUsername(user_data['username']):
             return None
-        user = user_service.create_user(user_data)
+        
+        # Hash password
+        hashed_pwd = hashlib.sha256()
+        hashed_pwd.update(user_data['password'].encode())
+        user_data['password'] = hashed_pwd.hexdigest()
+
+        user: dict = user_service.create_user(user_data)
         return user
 
     @staticmethod

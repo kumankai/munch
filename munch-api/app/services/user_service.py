@@ -5,12 +5,12 @@ from typing import List, Optional
 class UserService:
     @staticmethod
     def get_user_by_user_id(user_id: int) -> dict:
-        user = User.query.get(user_id)
+        user: User = User.query.get(user_id)
         return user.to_dict() if user else None
     
     @staticmethod
-    def get_all_users() -> List[User]:
-        users = User.query.all()
+    def get_all_users() -> Optional[List[dict]]:
+        users: List[User] = User.query.all()
         return [user.to_dict() for user in users]
 
     @staticmethod
@@ -24,20 +24,20 @@ class UserService:
         return new_user.to_dict()
     
     @staticmethod
-    def update_user(user_id: int, user_data: dict) -> User:
-        user = User.query.get(user_id)
-        if not user: return user
+    def update_user(user_id: int, user_data: dict) -> dict:
+        user: User = User.query.get(user_id)
+        if not user: return None
 
         user.username = user_data.get('username', user.username)
         user.password = user_data.get('password', user.password)
 
         db.session.commit()
-        return user
+        return user.to_dict()
 
     @staticmethod
     def delete_user(user_id: int) -> bool:
         user = User.query.get(user_id)
-        if not user: return user
+        if not user: return None
         db.session.delete(user)
         db.session.commit()
         return True

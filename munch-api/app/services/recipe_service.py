@@ -30,7 +30,7 @@ class RecipeService:
     @staticmethod
     def update_recipe(recipe_id: int, recipe_data: dict) -> dict:
         recipe: Recipe = Recipe.query.get(recipe_id)
-        if not recipe: return recipe
+        if not recipe: return None
 
         recipe.title = recipe_data.get('title', recipe.title)
         recipe.instructions = recipe_data.get('instructions', recipe.instructions)
@@ -43,7 +43,7 @@ class RecipeService:
     @staticmethod
     def delete_recipe(recipe_id: int) -> bool:
         recipe = Recipe.query.get(recipe_id)
-        if not recipe: return recipe
+        if not recipe: return None
         db.session.delete(recipe)
         db.session.commit()
         return True
