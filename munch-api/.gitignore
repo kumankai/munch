@@ -1,5 +1,6 @@
 instance/
 
+__pycache__/
 **/__pycache__/
 *.pyc
 *.pyo
@@ -10,3 +11,6 @@ venv/
 .env
 *.sqlite3
 .DS_Store
+
+postgres_data/
+migrations/
