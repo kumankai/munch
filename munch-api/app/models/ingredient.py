@@ -1,24 +1,22 @@
 from app import db
 
-class Recipe(db.Model):
-    __tablename__ = 'Recipes'
+class Ingredient(db.Model):
+    __tablename__ = 'Ingredients'
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    instructions = db.Column(db.Text, nullable=False)
-    author = db.Column(db.String(64), nullable=False)
-    image_url = db.Column(db.String(255), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    name = db.Column(db.String(64), nullable=False)
+    quantity = db.Column(db.Numeric(10, 2), nullable=True)
+    unit = db.Column(db.String(20), nullable=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('Recipes.id'), nullable=False)
 
     def __repr__(self):
-        return f'<Recipe {self.id}, {self.title}>'
+        return f'<Ingredient {self.id}, {self.name}>'
     
     def to_dict(self):
         return {
             'id': self.id,
-            'title': self.title,
-            'instructions': self.instructions,
-            'author': self.author,
-            'image_url': self.image_url,
-            'user_id': self.user_id
+            'name': self.name,
+            'quantity': float(self.quantity) if self.quantity is not None else None,  # Convert Decimal to float for JSON
+            'unit': self.unit,
+            'recipe_id': self.recipe_id
         }

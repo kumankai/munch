@@ -1,6 +1,5 @@
 from app.models.user import User
 from app.extensions import db
-from typing import List, Optional
 
 class UserService:
     @staticmethod
