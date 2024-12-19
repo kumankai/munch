@@ -23,7 +23,8 @@ class IngredientService:
     @staticmethod
     def save_all_ingredients(recipe_id:int, ingredients: List[dict]) -> bool:
         try:
-            for ingredient in ingredients:
+            for i in range(20):
+                ingredient = ingredients[i]
                 ingredient['recipe_id'] = recipe_id
                 IngredientService.save_ingredient(ingredient)
         except:
