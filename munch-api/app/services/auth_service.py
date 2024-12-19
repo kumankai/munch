@@ -1,5 +1,4 @@
 from app.models.user import User
-from app.extensions import db
 from typing import Optional
 from app.services.user_service import UserService
 import hashlib

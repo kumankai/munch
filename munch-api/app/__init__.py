@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_migrate import Migrate
 from app.config import Config
 from app.extensions import db
 from app.models import User, Recipe, Ingredient
@@ -11,6 +12,7 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     db.init_app(app)
+    migrate = Migrate(app, db)
 
     # Register routes
     app.register_blueprint(recipes, url_prefix='/api')

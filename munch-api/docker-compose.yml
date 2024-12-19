@@ -27,6 +27,15 @@ services:
     networks:
       - munch-network
 
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - munch-network
+    depends_on:
+      - db
+
 volumes:
   postgres_data:
 
