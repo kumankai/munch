@@ -1,42 +1,55 @@
 from flask import jsonify
-import requests
-from app.services.recipe_service import RecipeService
-from app.services.ingredient_service import IngredientService
-from typing import List
+import aiohttp
+from typing import List, Dict
+import asyncio
 
 BASEURL = "https://www.themealdb.com/api/json/v1/1/"
 
 class TheMealDbService:
     @staticmethod
-    def search_by_ingredients(ingredients: List[str]) -> List[dict]:
-        meals = []
-        recipe_ids = set() # Remove duplicate recipes
-
+    async def search_by_ingredients(ingredients: List[str]) -> List[dict]:
+        unique_meals = {}  # Use dict for O(1) lookup
+        
+        # Create tasks for all ingredient searches
+        tasks = []
         for ingredient in ingredients:
-            recipes = TheMealDbService.search_by_ingredient(ingredient)
+            tasks.append(TheMealDbService.search_by_ingredient(ingredient))
+            
+        # Run all requests concurrently
+        results = await asyncio.gather(*tasks)
+        
+        # Flatten results and remove duplicates
+        for recipes in results:
             for recipe in recipes:
-                if recipe['idMeal'] not in recipe_ids:
-                    meals.append(recipe)
-                    recipe_ids.add(recipe['idMeal'])
+                meal_id = recipe['idMeal']
+                if meal_id not in unique_meals:
+                    unique_meals[meal_id] = recipe
 
-        return meals
+        return list(unique_meals.values())
 
-    # Search recipes by ingredient
     @staticmethod
-    def search_by_ingredient(ingredient: str) -> List[dict]:
-        url = f"{BASEURL}filter.php?i={ingredient}"
-        response = requests.get(url).json()
-        data = response['meals']
-        meals = []
+    async def search_by_ingredient(ingredient: str) -> List[dict]:
+        async with aiohttp.ClientSession() as session:
+            url = f"{BASEURL}filter.php?i={ingredient}"
+            
+            async with session.get(url) as response:
+                data = await response.json()
+                if not data.get('meals'):
+                    return []
 
-        for meal in data:
-            meals.append(TheMealDbService.get_recipe(meal['strMeal']))
+                # Create tasks for all recipe details
+                tasks = []
+                for meal in data['meals']:
+                    tasks.append(TheMealDbService.get_recipe(meal['strMeal']))
+                
+                # Run all requests concurrently
+                return await asyncio.gather(*tasks)
 
-        return meals
-
-    # Search recipe by recipe name
     @staticmethod
-    def get_recipe(recipe_title: str) -> dict:
-        url = f"{BASEURL}search.php?s={recipe_title}"
-        response = requests.get(url).json()
-        return response['meals'][0]
+    async def get_recipe(recipe_title: str) -> dict:
+        async with aiohttp.ClientSession() as session:
+            url = f"{BASEURL}search.php?s={recipe_title}"
+            
+            async with session.get(url) as response:
+                data = await response.json()
+                return data['meals'][0] if data.get('meals') else None

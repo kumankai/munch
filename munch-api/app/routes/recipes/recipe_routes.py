@@ -3,6 +3,7 @@ from flask import request, jsonify
 from app.services.recipe_service import RecipeService
 from app.services.ingredient_service import IngredientService
 from app.services.themealdb_service import TheMealDbService
+import asyncio
 
 @recipes.route('/recipes/all/<int:user_id>', methods=['GET'])
 def get_user_recipes(user_id):
@@ -51,16 +52,11 @@ def delete_recipe(recipe_id):
 
 @recipes.route('/recipes/search', methods=['POST'])
 def search_recipes():
-    data = request.get_json()
-    ingredients = data['ingredients']
-    recipes = TheMealDbService.search_by_ingredients(ingredients)
-    status = 200 if recipes else 204
-    return ({ 'recipes': recipes }), status
-    # try:
-    #     data = request.get_json()
-    #     ingredients = data['ingredients']
-    #     recipes = TheMealDbService.search_by_ingredients(ingredients)
-    #     status = 200 if recipes else 204
-    #     return ({ 'recipes': recipes }), status
-    # except:
-    #     return jsonify({ 'message': 'Something went wrong' }), 500
+    try:
+        data = request.get_json()
+        ingredients = data['ingredients']
+        recipes = asyncio.run(TheMealDbService.search_by_ingredients(ingredients))
+        status = 200 if recipes else 204
+        return jsonify({ 'recipes': recipes }), status
+    except Exception as e:
+        return jsonify({ 'message': str(e) }), 500
