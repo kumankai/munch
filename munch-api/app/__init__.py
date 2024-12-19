@@ -6,10 +6,12 @@ from app.models import User, Recipe, Ingredient
 from app.routes.recipes import recipes
 from app.routes.user import user
 from app.routes.auth import auth
+import os
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
     db.init_app(app)
     migrate = Migrate(app, db)

@@ -6,6 +6,7 @@ services:
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
     environment:
+      - FLASK_ENV=development
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
