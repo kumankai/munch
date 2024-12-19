@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  db-dev:
+    image: postgres:15
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+
+  adminer-dev:
+    image: adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db-dev
+
+volumes:
+  postgres_data_dev:
