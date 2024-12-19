@@ -7,7 +7,7 @@ WORKDIR /app
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    FLASK_APP=run.py \
+    FLASK_APP=main.py \
     FLASK_ENV=production
 
 # Install system dependencies
