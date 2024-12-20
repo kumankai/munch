@@ -1,6 +1,5 @@
-from flask import jsonify
 import aiohttp
-from typing import List, Dict
+from typing import List
 import asyncio
 
 BASEURL = "https://www.themealdb.com/api/json/v1/1/"

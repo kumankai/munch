@@ -1,8 +1,9 @@
 requests
 flask
+"flask[async]"
 flask-sqlalchemy
 flask-migrate
+flask-jwt-extended
 python-dotenv
 psycopg2-binary
 aiohttp
-"flask[async]"
