@@ -7,7 +7,7 @@ from app.services.themealdb_service import TheMealDbService
 import asyncio
 
 @recipes.route('/recipes/all', methods=['GET'])
-@jwt_required
+@jwt_required()
 def get_user_recipes():
     user_id = get_jwt_identity()
     recipes = RecipeService.get_all_recipes_by_user_id(user_id)
@@ -21,7 +21,7 @@ def get_recipe(recipe_id):
     return jsonify({ 'recipe': recipe }), 200
 
 @recipes.route('/recipes/create', methods=['POST'])
-@jwt_required
+@jwt_required()
 def create_recipe():
     try:
         recipe_data = request.get_json()
@@ -34,7 +34,7 @@ def create_recipe():
         return jsonify({ 'error': str(e) }), 500  # Internal Server Error
 
 @recipes.route('/recipes/update/<int:recipe_id>', methods=['POST'])
-@jwt_required
+@jwt_required()
 def update_recipe(recipe_id):
     recipe_data = request.get_json()
     new_recipe = RecipeService.update_recipe(recipe_id, recipe_data)
@@ -43,7 +43,7 @@ def update_recipe(recipe_id):
     return jsonify({ 'recipe': new_recipe }), 200
 
 @recipes.route('/recipes/delete/<int:recipe_id>', methods=['DELETE'])
-@jwt_required
+@jwt_required()
 def delete_recipe(recipe_id):
     result1 = IngredientService.delete_ingredients_by_recipe_id(recipe_id)
     result2 = RecipeService.delete_recipe(recipe_id)
