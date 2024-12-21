@@ -40,7 +40,19 @@ def logout():
 def refresh():
     try:
         user_id = get_jwt_identity()
+
+        data = request.get_json()
+        old_access_token = data.get('old_access_token', None)
+        
+        result = AuthService.refresh_access_token(
+            user_id, 
+            old_access_token
+        )
+
         result = AuthService.refresh_access_token(user_id)
+        if not result:
+            return jsonify({ 'error': 'Could not refresh token' }, 500)
+        
         return result, 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500

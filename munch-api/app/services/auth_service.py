@@ -1,5 +1,5 @@
 from flask import make_response, jsonify, request
-from flask_jwt_extended import create_access_token, create_refresh_token, decode_token
+from flask_jwt_extended import create_access_token, create_refresh_token, decode_token, get_jwt
 from app.extensions import db
 from app.services.user_service import UserService
 from app.models.user import User
@@ -128,9 +128,25 @@ class AuthService:
         return {'access_token': access_token, 'refresh_token': refresh_token}
     
     @staticmethod
-    def refresh_access_token(user_id: str) -> Optional[dict]:
+    def refresh_access_token(user_id: str, old_access_token: str = None) -> Optional[dict]:
         # Create a new access token using refresh token
         try:
+            # Blacklist the old access token if provided
+            if old_access_token:
+                try:
+                    token_data = decode_token(old_access_token)
+                    
+                    blacklist = TokenBlacklist(
+                        jti=token_data['jti'],
+                        expires_at=datetime.fromtimestamp(token_data['exp'], tz=timezone.utc)
+                    )
+                    db.session.add(blacklist)
+                    db.session.commit()
+                except Exception as e:
+                    print(f"Error blacklisting old token: {str(e)}")
+                    # Continue even if blacklisting fails
+                    pass
+
             access_token = create_access_token(identity=user_id)
             return {
                 'access_token': access_token
