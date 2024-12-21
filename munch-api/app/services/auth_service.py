@@ -1,5 +1,5 @@
-from flask import make_response, jsonify
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask import make_response, jsonify, request
+from flask_jwt_extended import create_access_token, create_refresh_token, decode_token
 from app.extensions import db
 from app.services.user_service import UserService
 from app.models.user import User
@@ -20,6 +20,18 @@ class AuthService:
             if not user or not AuthService.check_password(user.password, input_password):
                 return None
 
+            # Check for existing valid session
+            existing_token = request.cookies.get('refresh_token')
+            if existing_token:
+                try:
+                    decode_token(existing_token)
+                    return make_response(jsonify({
+                        'error': 'Already logged in'
+                    })), 400
+                except:
+                    # Token is invalid or expired, continue with login
+                    pass
+
             return AuthService.create_authorization_response(user.to_dict(), str(user.id))
         except Exception as e:
             print(f"Login error: {str(e)}")
@@ -37,8 +49,7 @@ class AuthService:
             user_data['password'] = hashed_pwd.hexdigest()
 
             user: dict = UserService.create_user(user_data)
-
-            return AuthService.create_authorization_response(user, str(user['user_id']))
+            return AuthService.create_authorization_response(user, str(user['id']))
         except Exception as e:
             print(f"Register error: {str(e)}")
             return None
