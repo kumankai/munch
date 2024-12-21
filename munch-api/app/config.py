@@ -16,9 +16,6 @@ class Config:
     
     if not JWT_ACCESS_TOKEN_SECRET_KEY or not JWT_REFRESH_TOKEN_SECRET_KEY:
         raise ValueError("JWT secret keys not set")
-
-    if not JWT_ACCESS_TOKEN_SECRET_KEY:
-        raise ValueError("No JWT_SECRET_KEY set for Flask application")
     
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)

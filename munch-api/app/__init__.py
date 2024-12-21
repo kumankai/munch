@@ -1,5 +1,6 @@
 from app.models import User, Recipe, Ingredient, TokenBlacklist
 from flask import Flask, current_app
+from flask_cors import CORS
 from app.config import Config
 from app.extensions import db, jwt
 from app.utils.jwt_callbacks import register_jwt_callbacks
@@ -16,6 +17,8 @@ def create_app(config_class=Config):
     jwt.init_app(app)
 
     register_jwt_callbacks(jwt)
+
+    CORS(app, origins=["http://localhost:3000"])
 
     # Register routes
     app.register_blueprint(recipes, url_prefix='/api')
