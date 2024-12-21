@@ -1,4 +1,4 @@
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token
 from app.extensions import db
 from app.services.user_service import UserService
 from app.models.user import User
@@ -15,9 +15,13 @@ class AuthService:
         if not user or not AuthService.check_password(user.password, input_password):
             return None
 
-        access_token = create_access_token(identity=str(user.id))
+        tokens = AuthService.create_tokens(str(user.id))
 
-        return { 'user': user.to_dict(), 'access_token': access_token }
+        return {
+            'user': user.to_dict(),
+            'access_token': tokens['access_token'],
+            'refresh_token': tokens['refresh_token']
+        }
     
     @staticmethod
     def register(user_data: User) -> Optional[dict]:
@@ -31,8 +35,12 @@ class AuthService:
 
         user: dict = UserService.create_user(user_data)
 
-        access_token = create_access_token(identity=str(user['id']))
-        return { 'user': user, 'access_token': access_token }
+        tokens = AuthService.create_tokens(str(user['user_id']))
+        return {
+            'user': user,
+            'access_token': tokens['access_token'],
+            'refresh_token': tokens['refresh_token']
+        }
 
     @staticmethod
     def logout(token_data: dict) -> bool:
@@ -49,6 +57,34 @@ class AuthService:
             print(f"Logout error: {str(e)}")
             db.session.rollback()
             return False
+    
+    @staticmethod
+    def create_tokens(user_id: str) -> dict:
+        # Create access token with access token secret
+        access_token = create_access_token(
+            identity=user_id
+        )
+        
+        # Create refresh token with refresh token secret
+        refresh_token = create_refresh_token(
+            identity=user_id,
+            additional_claims={'refresh_token': True},  # Mark as refresh token
+            headers={'kid': 'refresh'}  # Key ID to identify refresh token
+        )
+
+        return {'access_token': access_token, 'refresh_token': refresh_token}
+    
+    @staticmethod
+    def refresh_access_token(user_id: str) -> Optional[dict]:
+        """Create a new access token using refresh token"""
+        try:
+            access_token = create_access_token(identity=user_id)
+            return {
+                'access_token': access_token
+            }
+        except Exception as e:
+            print(f"Refresh error: {str(e)}")
+            return None
         
     @staticmethod
     def cleanup_expired_tokens() -> int:
