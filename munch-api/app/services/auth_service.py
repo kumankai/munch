@@ -2,6 +2,7 @@ from flask import make_response, jsonify, request
 from flask_jwt_extended import create_access_token, create_refresh_token, decode_token, get_jwt
 from app.extensions import db
 from app.services.user_service import UserService
+from app.services.token_service import TokenService
 from app.models.user import User
 from app.models.token_blacklist import TokenBlacklist
 from datetime import datetime, timezone
@@ -57,20 +58,7 @@ class AuthService:
     @staticmethod
     def logout(access_token: dict, refresh_token: dict) -> Optional[tuple]:
         try:
-            # Create blacklist entry
-            access_blacklist = TokenBlacklist(
-                jti=access_token['jti'],
-                expires_at=datetime.fromtimestamp(access_token['exp'], tz=timezone.utc)
-            )
-            db.session.add(access_blacklist)
-
-            if refresh_token:
-                refresh_blacklist = TokenBlacklist(
-                    jti=refresh_token['jti'],
-                    expires_at=datetime.fromtimestamp(refresh_token['exp'], tz=timezone.utc)
-                )
-            db.session.add(refresh_blacklist)
-            db.session.commit()
+            TokenService.blacklist_tokens(access_token, refresh_token)
             
             response = make_response(jsonify({
                 'message': 'Successfully logged out'
@@ -89,7 +77,7 @@ class AuthService:
     def create_authorization_response(user: dict, user_id: str) -> Optional[tuple]:
             try:
                 # Create tokens
-                tokens = AuthService.create_tokens(user_id)
+                tokens = TokenService.create_tokens(user_id)
 
                 response = make_response(jsonify({
                     'user': user,
@@ -113,21 +101,6 @@ class AuthService:
                 return jsonify({'error': str(e)}), 500
     
     @staticmethod
-    def create_tokens(user_id: str) -> dict:
-        # Create access token with access token secret
-        access_token = create_access_token(
-            identity=user_id
-        )
-        
-        # Create refresh token with refresh token secret
-        refresh_token = create_refresh_token(
-            identity=user_id,
-            additional_claims={'type': 'refresh'},  # Mark as refresh token
-        )
-
-        return {'access_token': access_token, 'refresh_token': refresh_token}
-    
-    @staticmethod
     def refresh_access_token(user_id: str, old_access_token: str = None) -> Optional[dict]:
         # Create a new access token using refresh token
         try:
@@ -136,12 +109,7 @@ class AuthService:
                 try:
                     token_data = decode_token(old_access_token)
                     
-                    blacklist = TokenBlacklist(
-                        jti=token_data['jti'],
-                        expires_at=datetime.fromtimestamp(token_data['exp'], tz=timezone.utc)
-                    )
-                    db.session.add(blacklist)
-                    db.session.commit()
+                    TokenService.blacklist(token_data)
                 except Exception as e:
                     print(f"Error blacklisting old token: {str(e)}")
                     # Continue even if blacklisting fails
@@ -154,19 +122,6 @@ class AuthService:
         except Exception as e:
             print(f"Refresh error: {str(e)}")
             return None
-        
-    @staticmethod
-    def cleanup_expired_tokens() -> int:
-        try:
-            count = TokenBlacklist.query.filter(
-                TokenBlacklist.expires_at < datetime.now(timezone.utc)
-            ).delete()
-            db.session.commit()
-            return count
-        except Exception as e:
-            print(f"Cleanup error: {str(e)}")
-            db.session.rollback()
-            return 0
 
     @staticmethod
     def check_username(username: str) -> bool:
