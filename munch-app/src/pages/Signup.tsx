@@ -1,16 +1,22 @@
 import '../styles/Signup.css'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { authService } from '../api/services/authService'
+import { useUser } from '../context/UserContext'
+import { ApiError } from '../types/api'
 
 const Signup = () => {
     const [formData, setFormData] = useState({
-        email: '',
+        username: '',
         password: '',
         confirmPassword: ''
     })
+    const [error, setError] = useState('')
     const navigate = useNavigate()
+    const { setUser } = useUser()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setError('')
         const { name, value } = e.target
         setFormData(prev => ({
             ...prev,
@@ -18,29 +24,46 @@ const Signup = () => {
         }))
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (formData.password !== formData.confirmPassword) {
-            alert("Passwords don't match!")
+            setError("Passwords don't match!")
             return
         }
 
-        console.log('Form submitted:', formData)
-        navigate('/')
+        try {
+            const response = await authService.signup({
+                username: formData.username,
+                password: formData.password
+            })
+            
+            if (response.access_token) {
+                localStorage.setItem('accessToken', response.access_token)
+                setUser(response.user)
+                
+                navigate('/')
+            } else {
+                navigate('/login')
+            }
+        } catch (err: unknown) {
+            const error = err as ApiError
+            setError(error.response?.data?.error || 'An error occurred during signup')
+        }
     }
 
     return (
         <div className="signup-container">
             <div className="signup-box">
                 <h1>Create Account</h1>
+                {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="username">Username</label>
                         <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
+                            type="text"
+                            id="username"
+                            name="username"
+                            value={formData.username}
                             onChange={handleChange}
                             required
                         />

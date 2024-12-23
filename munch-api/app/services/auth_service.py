@@ -80,7 +80,10 @@ class AuthService:
                 tokens = TokenService.create_tokens(user_id)
 
                 response = make_response(jsonify({
-                    'user': user,
+                    'user': {
+                        'id': user['id'],
+                        'username': user['username']
+                    },
                     'access_token': tokens['access_token'],
                     'refresh_token': tokens['refresh_token']
                 }))

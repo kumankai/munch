@@ -4,6 +4,7 @@ from flask_cors import CORS
 from app.config import Config
 from app.extensions import db, jwt
 from app.utils.jwt_callbacks import register_jwt_callbacks
+from app.middleware.cors_handler import handle_options
 from app.routes.recipes import recipes
 from app.routes.user import user
 from app.routes.auth import auth
@@ -18,7 +19,9 @@ def create_app(config_class=Config):
 
     register_jwt_callbacks(jwt)
 
-    CORS(app, origins=["http://localhost:3000"])
+    CORS(app, supports_credentials=True)
+
+    app.before_request(handle_options)
 
     # Register routes
     app.register_blueprint(recipes, url_prefix='/api')

@@ -1,14 +1,20 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { authService } from '../api/services/authService'
+import { useUser } from '../context/UserContext'
+import { ApiError } from '../types/api'
 
 const Login = () => {
     const [formData, setFormData] = useState({
-        email: '',
+        username: '',
         password: ''
     })
+    const [error, setError] = useState('')
     const navigate = useNavigate()
+    const { setUser } = useUser()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setError('')
         const { name, value } = e.target
         setFormData(prev => ({
             ...prev,
@@ -16,25 +22,37 @@ const Login = () => {
         }))
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-
-        console.log('Form submitted:', formData)
-        navigate('/')
+        try {
+            const response = await authService.login({
+                username: formData.username,
+                password: formData.password
+            })
+            
+            localStorage.setItem('accessToken', response.access_token)
+            setUser(response.user)
+            
+            navigate('/')
+        } catch (err: unknown) {
+            const error = err as ApiError
+            setError(error.response?.data?.error || 'An error occurred during login')
+        }
     }
 
     return (
         <div className="login-container">
             <div className="login-box">
                 <h1>Login</h1>
+                {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="username">Username</label>
                         <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
+                            type="text"
+                            id="username"
+                            name="username"
+                            value={formData.username}
                             onChange={handleChange}
                             required
                         />
