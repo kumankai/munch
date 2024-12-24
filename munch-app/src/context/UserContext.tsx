@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { userService } from '../api/services/userService';
+import { userService } from '../services/userService';
 
 interface User {
   id: string;
@@ -20,17 +20,21 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const loadUser = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        try {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        
+        if (accessToken) {
           const { user } = await userService.getCurrentUser();
           setUser(user);
-        } catch (error) {
-          console.error('Failed to load user:', error);
-          localStorage.removeItem('accessToken');
+        } else {
+          setUser(null);
         }
+      } catch (error) {
+        console.error('Failed to load user:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     loadUser();

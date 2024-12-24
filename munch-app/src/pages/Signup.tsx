@@ -1,7 +1,7 @@
 import '../styles/Signup.css'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { authService } from '../api/services/authService'
+import { authService } from '../services/authService'
 import { useUser } from '../context/UserContext'
 import { ApiError } from '../types/api'
 
@@ -38,7 +38,6 @@ const Signup = () => {
             })
             
             if (response.access_token) {
-                localStorage.setItem('accessToken', response.access_token)
                 setUser(response.user)
                 
                 navigate('/')
@@ -65,6 +64,8 @@ const Signup = () => {
                             name="username"
                             value={formData.username}
                             onChange={handleChange}
+                            placeholder="Username"
+                            autoComplete="username"
                             required
                         />
                     </div>
@@ -76,6 +77,8 @@ const Signup = () => {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
+                            placeholder="Password"
+                            autoComplete="new-password"
                             required
                         />
                     </div>
@@ -87,6 +90,8 @@ const Signup = () => {
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleChange}
+                            placeholder="Password"
+                            autoComplete="new-password"
                             required
                         />
                     </div>

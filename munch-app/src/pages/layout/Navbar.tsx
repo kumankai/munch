@@ -1,22 +1,37 @@
+import { useState, useRef, useEffect } from 'react'
 import '../../styles/Navbar.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
-import { authService } from '../../api/services/authService'
+import { authService } from '../../services/authService'
 
 const Navbar = () => {
     const navigate = useNavigate()
     const { user, setUser } = useUser()
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const dropdownRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false)
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [])
 
     const handleLogout = async () => {
         try {
             await authService.logout()
+        } catch (error: unknown) {
+            console.log('Logout error:', error)
+        } finally {
             setUser(null)
-            navigate('/login')
-        } catch (error) {
-            console.error('Logout failed:', error)
-            // Still navigate to login even if the request fails
-            setUser(null)
-            navigate('/login')
+            setIsDropdownOpen(false)
+            navigate('/')
         }
     }
 
@@ -31,11 +46,39 @@ const Navbar = () => {
             </div>
             <div className="nav-links">
                 {user ? (
-                    <button onClick={handleLogout}>Logout</button>
+                    <div className="dropdown" ref={dropdownRef}>
+                        <button 
+                            className="dropdown-toggle"
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        >
+                            {user.username}
+                        </button>
+                        {isDropdownOpen && (
+                            <div className="dropdown-menu">
+                                <button onClick={() => {
+                                    navigate('/profile')
+                                    setIsDropdownOpen(false)
+                                }}>
+                                    Profile
+                                </button>
+                                <button onClick={() => {
+                                    navigate('/settings')
+                                    setIsDropdownOpen(false)
+                                }}>
+                                    Settings
+                                </button>
+                                <button onClick={handleLogout}>
+                                    Logout
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 ) : (
-                    <button onClick={() => navigate('/login')}>Login</button>
+                    <>
+                        <Link to="/login">Login</Link>
+                        <Link to="/signup">Sign Up</Link>
+                    </>
                 )}
-                <Link to="/signup">Sign Up</Link>
             </div>
         </nav>
     )

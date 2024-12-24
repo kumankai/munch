@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { authService } from '../api/services/authService'
+import { authService } from '../services/authService'
 import { useUser } from '../context/UserContext'
 import { ApiError } from '../types/api'
 
@@ -30,7 +30,6 @@ const Login = () => {
                 password: formData.password
             })
             
-            localStorage.setItem('accessToken', response.access_token)
             setUser(response.user)
             
             navigate('/')
@@ -54,6 +53,8 @@ const Login = () => {
                             name="username"
                             value={formData.username}
                             onChange={handleChange}
+                            placeholder="Username"
+                            autoComplete="username"
                             required
                         />
                     </div>
@@ -65,6 +66,8 @@ const Login = () => {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
+                            placeholder="Password"
+                            autoComplete="current-password"
                             required
                         />
                     </div>

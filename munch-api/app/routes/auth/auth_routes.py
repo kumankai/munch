@@ -1,7 +1,7 @@
 from app.services.auth_service import AuthService
 from app.routes.auth import auth
 from flask import request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt, decode_token, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt, decode_token, get_jwt_identity, verify_jwt_in_request
 
 @auth.route('/auth/login', methods=['POST'])
 def login():
@@ -36,20 +36,18 @@ def logout():
         return jsonify({'error': str(e)}), 500
     
 @auth.route('/auth/refresh', methods=['POST'])
-@jwt_required(refresh=True)
 def refresh():
     try:
+        verify_jwt_in_request(refresh=True, locations=['cookies'])
         user_id = get_jwt_identity()
-
         data = request.get_json()
-        old_access_token = data.get('old_access_token', None)
+        old_access_token = data['access_token']
         
         result = AuthService.refresh_access_token(
             user_id, 
             old_access_token
         )
-
-        result = AuthService.refresh_access_token(user_id)
+        
         if not result:
             return jsonify({ 'error': 'Could not refresh token' }, 500)
         

@@ -8,6 +8,9 @@ from app.models.token_blacklist import TokenBlacklist
 from datetime import datetime, timezone
 from typing import Optional
 import hashlib
+import os
+
+isSecure = True if os.getenv('FLASK_ENV') == 'production' else False
 
 class AuthService:
     @staticmethod
@@ -84,8 +87,7 @@ class AuthService:
                         'id': user['id'],
                         'username': user['username']
                     },
-                    'access_token': tokens['access_token'],
-                    'refresh_token': tokens['refresh_token']
+                    'access_token': tokens['access_token']
                 }))
 
                 # Set refresh token in HTTP-only cookie
@@ -93,7 +95,7 @@ class AuthService:
                     'refresh_token',
                     tokens['refresh_token'],
                     httponly=True,
-                    secure=True,
+                    secure=isSecure,
                     samesite='Strict',
                     max_age=30 * 24 * 60 * 60  # 30 days
                 )
