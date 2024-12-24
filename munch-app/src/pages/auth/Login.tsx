@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { authService } from '../services/authService'
-import { useUser } from '../context/UserContext'
-import { ApiError } from '../types/api'
+import { authService } from '../../services/authService'
+import { useUser } from '../../context/UserContext'
+import { ApiError } from '../../types/api'
 
 const Login = () => {
     const [formData, setFormData] = useState({
