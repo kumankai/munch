@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { recipeService } from '../../services/recipeService';
-import { Recipe } from '../../types';
+import { RecipeAPIReponse } from '../../types';
 import '../../styles/Search.css';
 
 const Search = () => {
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [currentIngredient, setCurrentIngredient] = useState('');
-    const [recipes, setRecipes] = useState<Recipe[]>([]);
+    const [recipes, setRecipes] = useState<RecipeAPIReponse[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -31,8 +31,13 @@ const Search = () => {
         try {
             setLoading(true);
             setError('');
-            const result = await recipeService.getRecipesByIngredients(ingredients);
-            setRecipes(result as Recipe[]);
+            const { recipes: searchResults } = await recipeService.getRecipesByIngredients(ingredients);
+            if (searchResults && Array.isArray(searchResults)) {
+                setRecipes(searchResults);
+            } else {
+                setRecipes([]);
+                setError('No recipes found');
+            }
         } catch (err) {
             setError('Failed to fetch recipes');
             console.error(err);
@@ -43,7 +48,7 @@ const Search = () => {
 
     return (
         <div className="search-container">
-            <h1>Search Recipes by Ingredients</h1>
+            <h1>Search Recipes</h1>
             
             <div className="search-form">
                 <form onSubmit={handleAddIngredient}>
@@ -88,10 +93,10 @@ const Search = () => {
 
             <div className="recipes-grid">
                 {recipes.map((recipe) => (
-                    <div key={recipe.id} className="recipe-card">
-                        <img src={recipe.image_url} alt={recipe.title} />
-                        <h3>{recipe.title}</h3>
-                        <p>By {recipe.author}</p>
+                    <div key={recipe.idMeal} className="recipe-card">
+                        <img src={recipe.strMealThumb} alt={recipe.strMeal} />
+                        <h3>{recipe.strMeal}</h3>
+                        <p>{recipe.strArea} • {recipe.strCategory}</p>
                     </div>
                 ))}
             </div>

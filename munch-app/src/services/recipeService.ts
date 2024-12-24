@@ -1,6 +1,10 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { API_BASE_URL } from '../api/config';
-import { RecipeData, RecipeUpdateData, IngredientsRequest } from '../types';
+import { RecipeData, RecipeUpdateData, RecipeAPIReponse } from '../types';
+
+interface RecipeResponse {
+    recipes: RecipeAPIReponse[];
+}
 
 export const recipeService = {
     async getRecipesByUserId() {
@@ -15,27 +19,12 @@ export const recipeService = {
         return response.data;
     },
 
-    async getRecipesByIngredients(ingredients: string[]) {
-        const payload: IngredientsRequest = {
-            ingredients,
-          };
-
-        const response: AxiosResponse<unknown> = await axios.post(
+    async getRecipesByIngredients(ingredients: string[]): Promise<RecipeResponse> {
+        const response = await axios.post<RecipeResponse>(
             `${API_BASE_URL}/recipes/search`,
-            payload
-          );
-
-        // const data: IngredientsRequest = {
-        //     ingredients: ingredients
-        // };
-
-        // const response = await axios<any, AxiosResponse<RecipeData[]>>({
-        //     method: 'post',
-        //     url: `${API_BASE_URL}/recipes/search/ingredients`,
-        //     data: data,
-        //     withCredentials: true
-        // });
-
+            { ingredients },
+            { withCredentials: true }
+        );
         return response.data;
     },
 
