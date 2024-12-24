@@ -1,24 +1,10 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { API_BASE_URL } from '../api/config';
+import { RecipeData, RecipeUpdateData, IngredientsRequest } from '../types';
 
-interface RecipeData {
-    id: number;
-    title: string;
-    instructions: string;
-    author: string;
-    image_url: string;
-}
-
-interface RecipeUpdateData {
-    title?: string;
-    instructions?: string;
-    author?: string;
-    image_url?: string;
-}
-
-export const RecipeService = {
+export const recipeService = {
     async getRecipesByUserId() {
-        const response = await axios.get(`${API_BASE_URL}/recipes/`, {
+        const response = await axios.get(`${API_BASE_URL}/recipes/all`, {
             withCredentials: true
         })
         return response.data;
@@ -29,8 +15,32 @@ export const RecipeService = {
         return response.data;
     },
 
+    async getRecipesByIngredients(ingredients: string[]) {
+        const payload: IngredientsRequest = {
+            ingredients,
+          };
+
+        const response: AxiosResponse<unknown> = await axios.post(
+            `${API_BASE_URL}/recipes/search`,
+            payload
+          );
+
+        // const data: IngredientsRequest = {
+        //     ingredients: ingredients
+        // };
+
+        // const response = await axios<any, AxiosResponse<RecipeData[]>>({
+        //     method: 'post',
+        //     url: `${API_BASE_URL}/recipes/search/ingredients`,
+        //     data: data,
+        //     withCredentials: true
+        // });
+
+        return response.data;
+    },
+
     async createRecipe(data: RecipeData) {
-        const response = await axios.put(`${API_BASE_URL}/recipes/create`, data, {
+        const response = await axios.post(`${API_BASE_URL}/recipes/create`, data, {
             withCredentials: true
         });
         return response.data;
@@ -44,7 +54,7 @@ export const RecipeService = {
     },
 
     async deleteRecipe(id: number) {
-        const response = await axios.put(`${API_BASE_URL}/recipes/delete/${id}`, {
+        const response = await axios.delete(`${API_BASE_URL}/recipes/delete/${id}`, {
             withCredentials: true
         });
         return response.data;

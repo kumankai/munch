@@ -1,15 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../api/config';
-
-interface LoginData {
-  username: string;
-  password: string;
-}
-
-interface SignupData {
-  username: string;
-  password: string;
-}
+import { LoginData, SignupData } from '../types';
 
 export const authService = {
   async login(data: LoginData) {
