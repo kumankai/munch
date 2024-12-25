@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import Home from '../Home'
@@ -19,6 +20,18 @@ function Layout() {
   const shouldShowNavbar = showNavbarRoutes.some(route => 
     location.pathname.startsWith(route)
   )
+
+  // Clear search data when leaving search/recipe pages
+  useEffect(() => {
+    const isSearchRelatedPage = 
+      location.pathname === '/search' || 
+      location.pathname.startsWith('/recipe/search');
+
+    if (!isSearchRelatedPage) {
+      localStorage.removeItem('searchIngredients');
+      localStorage.removeItem('searchResults');
+    }
+  }, [location.pathname]);
 
   return (
     <>
