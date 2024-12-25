@@ -7,12 +7,16 @@ import '../../styles/Details.css';
 
 const SearchDetails = () => {
     const { state } = useLocation();
-    const { user } = useUser();
+    const { user, savedRecipes } = useUser();
     const recipe: RecipeAPIResponse = state?.recipe;
 
     const handlePrint = () => {
         window.print();
     };
+
+    const isRecipeAlreadySaved = savedRecipes.some(
+        savedRecipe => savedRecipe.title === recipe?.strMeal
+    );
 
     const handleSave = async () => {
         if (!user) return;
@@ -48,8 +52,8 @@ const SearchDetails = () => {
                     instructions: recipe.strInstructions,
                     author: 'TheMealDB',
                     image_url: recipe.strMealThumb,
-                    user_id: user.id,
-                    youtube_url: recipe.strYoutube
+                    youtube_url: recipe.strYoutube,
+                    user_id: user.id
                 } as RecipeDto,
                 ingredients: ingredients
             };
@@ -123,9 +127,10 @@ const SearchDetails = () => {
                 <button 
                     className="action-button save-button" 
                     onClick={handleSave}
-                    disabled={!user} // Disable if not logged in
+                    disabled={!user || isRecipeAlreadySaved}
+                    title={isRecipeAlreadySaved ? 'Recipe already saved' : undefined}
                 >
-                    Save Recipe
+                    {isRecipeAlreadySaved ? 'Already Saved' : 'Save Recipe'}
                 </button>
                 <button 
                     className="action-button print-button"
