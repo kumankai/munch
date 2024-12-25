@@ -38,8 +38,11 @@ def logout():
 @auth.route('/auth/refresh', methods=['POST'])
 def refresh():
     try:
-        refresh_token = decode_token(request.cookies.get('refresh_token'))
-        user_id = refresh_token.get('sub')
+        refresh_token = request.cookies.get('refresh_token_cookie')
+        refresh_token = refresh_token.encode('utf-8')
+
+        decoded_token = decode_token(refresh_token)
+        user_id = decoded_token.get('sub')
         data = request.get_json()
         old_access_token = data['access_token']
         
