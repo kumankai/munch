@@ -1,3 +1,7 @@
+export interface RecipeResponse {
+    recipes: RecipeAPIResponse[];
+}
+
 export interface RecipeAPIResponse {
     idMeal: string;
     strMeal: string;

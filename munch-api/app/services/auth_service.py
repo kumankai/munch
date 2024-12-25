@@ -92,7 +92,7 @@ class AuthService:
 
                 # Set refresh token in HTTP-only cookie
                 response.set_cookie(
-                    'refresh_token',
+                    'refresh_token_cookie',
                     tokens['refresh_token'],
                     httponly=True,
                     secure=isSecure,

@@ -1,20 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { recipeService } from '../../services/recipeService';
-import { RecipeAPIResponse } from '../../types';
+import { RecipeAPIResponse, RecipeResponse } from '../../types';
 import '../../styles/Search.css';
 
 const Search = () => {
     const navigate = useNavigate();
-    const [ingredients, setIngredients] = useState<string[]>([]);
+    const [ingredients, setIngredients] = useState<string[]>(() => {
+        const saved = localStorage.getItem('searchIngredients');
+        return saved ? JSON.parse(saved) : [];
+    });
     const [currentIngredient, setCurrentIngredient] = useState('');
-    const [recipes, setRecipes] = useState<RecipeAPIResponse[]>([]);
+    const [recipes, setRecipes] = useState<RecipeAPIResponse[]>(() => {
+        try {
+            const saved = localStorage.getItem('searchResults');
+            return saved ? JSON.parse(saved) : [];
+        } catch (error) {
+            console.error('Error parsing saved search results:', error);
+            return [];
+        }
+    });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    // Save to localStorage whenever ingredients or recipes change
+    useEffect(() => {
+        try {
+            localStorage.setItem('searchIngredients', JSON.stringify(ingredients));
+            localStorage.setItem('searchResults', JSON.stringify(recipes));
+        } catch (error) {
+            console.error('Error saving to localStorage:', error);
+        }
+    }, [ingredients, recipes]);
+
     const handleAddIngredient = (e: React.FormEvent) => {
         e.preventDefault();
-        if (currentIngredient.trim() && ingredients.length < 10) {
+        if (currentIngredient.trim()) {
             setIngredients([...ingredients, currentIngredient.trim()]);
             setCurrentIngredient('');
         }
@@ -33,13 +54,10 @@ const Search = () => {
         try {
             setLoading(true);
             setError('');
-            const { recipes: searchResults } = await recipeService.getRecipesByIngredients(ingredients);
-            if (searchResults && Array.isArray(searchResults)) {
-                setRecipes(searchResults);
-            } else {
-                setRecipes([]);
-                setError('No recipes found');
-            }
+            const response: RecipeResponse = await recipeService.getRecipesByIngredients(ingredients);
+            setRecipes(response.recipes);
+            // Immediately save to localStorage after setting new recipes
+            localStorage.setItem('searchResults', JSON.stringify(response.recipes));
         } catch (err) {
             setError('Failed to fetch recipes');
             console.error(err);
@@ -98,7 +116,7 @@ const Search = () => {
             </div>
 
             <div className="recipes-grid">
-                {recipes.map((recipe) => (
+                {recipes.map((recipe: RecipeAPIResponse) => (
                     <div 
                         key={recipe.idMeal} 
                         className="recipe-card"

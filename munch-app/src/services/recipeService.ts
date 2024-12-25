@@ -1,10 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../api/config';
-import { RecipeData, RecipeUpdateData, RecipeAPIResponse } from '../types';
-
-interface RecipeResponse {
-    recipes: RecipeAPIResponse[];
-}
+import { RecipeData, RecipeUpdateData, RecipeResponse } from '../types';
 
 export const recipeService = {
     async getUserRecipes() {
