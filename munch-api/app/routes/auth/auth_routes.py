@@ -38,8 +38,8 @@ def logout():
 @auth.route('/auth/refresh', methods=['POST'])
 def refresh():
     try:
-        verify_jwt_in_request(refresh=True, locations=['cookies'])
-        user_id = get_jwt_identity()
+        refresh_token = decode_token(request.cookies.get('refresh_token'))
+        user_id = refresh_token.get('sub')
         data = request.get_json()
         old_access_token = data['access_token']
         
