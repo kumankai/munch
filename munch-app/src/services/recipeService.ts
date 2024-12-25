@@ -7,8 +7,8 @@ interface RecipeResponse {
 }
 
 export const recipeService = {
-    async getRecipesByUserId() {
-        const response = await axios.get(`${API_BASE_URL}/recipes/all`, {
+    async getUserRecipes() {
+        const response = await axios.get<RecipeData[]>(`${API_BASE_URL}/recipes/all`, {
             withCredentials: true
         })
         return response.data;

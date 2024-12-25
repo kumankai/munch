@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { recipeService } from '../../services/recipeService';
 import { RecipeAPIReponse } from '../../types';
 import '../../styles/Search.css';
 
 const Search = () => {
+    const navigate = useNavigate();
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [currentIngredient, setCurrentIngredient] = useState('');
     const [recipes, setRecipes] = useState<RecipeAPIReponse[]>([]);
@@ -93,7 +95,12 @@ const Search = () => {
 
             <div className="recipes-grid">
                 {recipes.map((recipe) => (
-                    <div key={recipe.idMeal} className="recipe-card">
+                    <div 
+                        key={recipe.idMeal} 
+                        className="recipe-card"
+                        onClick={() => navigate(`/recipe/${recipe.idMeal}`)}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <img src={recipe.strMealThumb} alt={recipe.strMeal} />
                         <h3>{recipe.strMeal}</h3>
                         <p>{recipe.strArea} • {recipe.strCategory}</p>
