@@ -23,7 +23,6 @@ def get_recipe(recipe_id):
 @recipes.route('/recipes/create', methods=['POST'])
 @jwt_required()
 def create_recipe():
-    import json
     try:
         recipe_data = request.get_json()
         recipe: dict = RecipeService.create_recipe(recipe_data['main'])
