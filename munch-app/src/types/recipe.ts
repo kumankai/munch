@@ -58,6 +58,7 @@ export interface RecipeData {
     instructions: string;
     author: string;
     image_url: string;
+    youtube_url?: string;
 }
 
 export interface RecipeDataResponse {
@@ -69,4 +70,5 @@ export interface RecipeDto {
     instructions?: string;
     author?: string;
     image_url?: string;
+    youtube_url?: string;
 }

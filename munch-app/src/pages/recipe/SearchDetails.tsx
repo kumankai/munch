@@ -48,7 +48,8 @@ const SearchDetails = () => {
                     instructions: recipe.strInstructions,
                     author: 'TheMealDB',
                     image_url: recipe.strMealThumb,
-                    user_id: user.id
+                    user_id: user.id,
+                    youtube_url: recipe.strYoutube
                 } as RecipeDto,
                 ingredients: ingredients
             };

@@ -21,6 +21,7 @@ class RecipeService:
                 instructions=recipe_data['instructions'],
                 author=recipe_data['author'],
                 image_url=recipe_data.get('image_url'),
+                youtube_url=recipe_data.get('youtube_url'),
                 user_id=recipe_data['user_id']
             )
 
@@ -39,6 +40,7 @@ class RecipeService:
         recipe.instructions = recipe_data.get('instructions', recipe.instructions)
         recipe.author = recipe_data.get('author', recipe.author)
         recipe.image_url = recipe_data.get('image_url', recipe.image_url)
+        recipe.youtube_url = recipe_data.get('youtube_url', recipe.youtube_url)
         
         db.session.commit()
         return recipe.to_dict()
