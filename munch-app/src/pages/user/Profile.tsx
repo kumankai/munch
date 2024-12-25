@@ -3,24 +3,31 @@ import { useUser } from '../../context/UserContext'
 import { recipeService } from '../../services/recipeService'
 import { toast } from 'react-toastify';
 import '../../styles/Profile.css'
+import { useNavigate } from 'react-router-dom';
+import { RecipeData } from '../../types';
 
 const Profile = () => {
     const { user, savedRecipes, setSavedRecipes } = useUser()
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchSavedRecipes = async () => {
+        const fetchUserRecipes = async () => {
             try {
                 const response = await recipeService.getUserRecipes();
-                console.log(response);
-                const recipes = response?.recipes || [];
-                setSavedRecipes(Array.isArray(recipes) ? recipes : []);
+                const recipesWithIngredients = await Promise.all(
+                    response.recipes.map(async (recipe: RecipeData) => {
+                        const ingredientsResponse = await recipeService.getIngredientsByRecipeId(recipe.id);
+                        return { ...recipe, ingredients: ingredientsResponse.ingredients };
+                    })
+                );
+                setSavedRecipes(recipesWithIngredients);
             } catch (error) {
-                console.error('Error fetching saved recipes:', error)
+                console.error('Error fetching recipes:', error);
             }
-        }
+        };
 
         if (user) {
-            fetchSavedRecipes()
+            fetchUserRecipes();
         }
     }, [user, setSavedRecipes]);
 
@@ -34,6 +41,10 @@ const Profile = () => {
         }
     };
 
+    const handleRecipeClick = (recipe: RecipeData) => {
+        navigate(`/recipe/details/${recipe.id}`, { state: { recipe } });
+    };
+
     return (
         <div className="profile-container">
             <h1>Profile</h1>
@@ -43,13 +54,21 @@ const Profile = () => {
                 <h2>Saved Recipes</h2>
                 <div className="recipes-grid">
                     {savedRecipes.map((recipe) => (
-                        <div key={recipe.id} className="recipe-card">
+                        <div 
+                            key={recipe.id} 
+                            className="recipe-card"
+                            onClick={() => handleRecipeClick(recipe)}
+                            style={{ cursor: 'pointer' }}
+                        >
                             <img src={recipe.image_url} alt={recipe.title} />
                             <h3>{recipe.title}</h3>
                             <p>By {recipe.author}</p>
                             <button 
                                 className="delete-button"
-                                onClick={() => handleDelete(recipe.id)}
+                                onClick={(e) => {
+                                    e.stopPropagation();  // Prevent navigation when deleting
+                                    handleDelete(recipe.id);
+                                }}
                             >
                                 Delete
                             </button>

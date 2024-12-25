@@ -6,6 +6,7 @@ import Search from '../recipe/Search'
 import Login from '../auth/Login'
 import Signup from '../auth/Signup'
 import Add from '../recipe/Add'
+import Details from '../recipe/Details'
 import AuthRoutes from '../../utils/AuthRoutes'
 import ProtectedRoutes from '../../utils/ProtectedRoutes'
 import NotFound from '../NotFound'
@@ -17,11 +18,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Layout() {
   const location = useLocation()
-  const showNavbarRoutes = ['/', '/search', '/add-recipe', '/login', '/signup', '/profile', '/settings', '/recipe/search']
-
-  const shouldShowNavbar = showNavbarRoutes.some(route => 
-    location.pathname.startsWith(route)
-  )
 
   // Clear search data when leaving search/recipe pages
   useEffect(() => {
@@ -37,7 +33,7 @@ function Layout() {
 
   return (
     <>
-      {shouldShowNavbar && <Navbar />}
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
@@ -52,6 +48,7 @@ function Layout() {
           <Route path="/add-recipe" element={<Add />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/recipe/details/:id" element={<Details />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

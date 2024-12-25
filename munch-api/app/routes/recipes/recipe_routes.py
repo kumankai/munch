@@ -20,6 +20,13 @@ def get_recipe(recipe_id):
         return jsonify({ 'error': 'Recipe not found' }), 404
     return jsonify({ 'recipe': recipe }), 200
 
+@recipes.route('/recipes/ingredients/<int:recipe_id>', methods=['GET'])
+def get_ingredients_by_recipe_id(recipe_id):
+    ingredients = IngredientService.get_ingredients_by_recipe_id(recipe_id)
+    if not ingredients:
+        return jsonify({ 'error': 'Ingredients not found' }), 404
+    return jsonify({'ingredients': ingredients}), 200
+
 @recipes.route('/recipes/create', methods=['POST'])
 @jwt_required()
 def create_recipe():

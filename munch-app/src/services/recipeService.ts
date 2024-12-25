@@ -11,12 +11,19 @@ export const recipeService = {
     async getUserRecipes() {
         const response = await axios.get<RecipeDataResponse>(`${API_BASE_URL}/recipes/all`, {
             withCredentials: true
-        })
+        });
         return response.data;
     },
 
     async getRecipeByRecipeId(id: number) {
         const response = await axios.get(`${API_BASE_URL}/recipes/${id}`);
+        return response.data;
+    },
+
+    async getIngredientsByRecipeId(id: number) {
+        const response = await axios.get(`${API_BASE_URL}/recipes/ingredients/${id}`, {
+            withCredentials: true
+        });
         return response.data;
     },
 

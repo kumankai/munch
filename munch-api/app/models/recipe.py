@@ -21,5 +21,6 @@ class Recipe(db.Model):
             'instructions': self.instructions,
             'author': self.author,
             'image_url': self.image_url,
+            'youtube_url': self.youtube_url,
             'user_id': self.user_id
         }
