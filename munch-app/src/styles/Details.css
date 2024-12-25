@@ -147,4 +147,63 @@
     height: 100%;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.action-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.save-button {
+    background-color: #666;  /* Disabled state */
+    color: white;
+}
+
+.save-button:not(:disabled) {
+    background-color: #007bff;
+}
+
+.print-button {
+    background-color: #28a745;
+    color: white;
+}
+
+.print-button:hover {
+    background-color: #218838;
+}
+
+/* Print styles */
+@media print {
+    .recipe-actions {
+        display: none;  /* Hide buttons when printing */
+    }
+
+    .video-container {
+        display: none;  /* Hide video when printing */
+    }
+
+    .recipe-details {
+        padding: 0;  /* Remove padding for print */
+    }
+
+    body {
+        background: white;  /* White background for printing */
+    }
+
+    * {
+        color: black !important;  /* Force black text for printing */
+    }
 } 

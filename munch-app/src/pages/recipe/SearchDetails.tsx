@@ -6,6 +6,10 @@ const SearchDetails = () => {
     const { state } = useLocation();
     const recipe: RecipeAPIResponse = state?.recipe;
 
+    const handlePrint = () => {
+        window.print();
+    };
+
     if (!recipe) return <div className="error">Recipe not found</div>;
 
     // Convert YouTube URL to embed URL
@@ -62,6 +66,22 @@ const SearchDetails = () => {
                         step.trim() && <p key={index}>{step}</p>
                     ))}
                 </div>
+            </div>
+
+            <div className="recipe-actions">
+                <button 
+                    className="action-button save-button" 
+                    onClick={() => {}} // Placeholder for future save functionality
+                    disabled
+                >
+                    Save Recipe
+                </button>
+                <button 
+                    className="action-button print-button"
+                    onClick={handlePrint}
+                >
+                    Print Recipe
+                </button>
             </div>
         </div>
     );
