@@ -12,6 +12,8 @@ import NotFound from '../NotFound'
 import Profile from '../user/Profile'
 import Settings from '../user/Settings'
 import SearchDetails from '../recipe/SearchDetails'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Layout() {
   const location = useLocation()
@@ -54,6 +56,7 @@ function Layout() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <ToastContainer position="bottom-right" theme="dark" />
     </>
   )
 }

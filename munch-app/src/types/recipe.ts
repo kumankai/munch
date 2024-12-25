@@ -60,6 +60,10 @@ export interface RecipeData {
     image_url: string;
 }
 
+export interface RecipeDataResponse {
+    recipes: RecipeData[];
+}
+
 export interface RecipeDto {
     title?: string;
     instructions?: string;

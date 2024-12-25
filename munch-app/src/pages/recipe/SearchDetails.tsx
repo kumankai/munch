@@ -2,6 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { RecipeAPIResponse, RecipeDto } from '../../types';
 import { recipeService } from '../../services/recipeService';
 import { useUser } from '../../context/UserContext';
+import { toast } from 'react-toastify';
 import '../../styles/Details.css';
 
 const SearchDetails = () => {
@@ -53,11 +54,9 @@ const SearchDetails = () => {
             };
 
             await recipeService.createRecipe(recipeData);
-            // TODO: Add success notification
-            console.log('Recipe saved successfully');
-        } catch (error) {
-            // TODO: Add error notification
-            console.error('Failed to save recipe:', error);
+            toast.success('Recipe saved successfully!');
+        } catch {
+            toast.error('Failed to save recipe. Please try again.');
         }
     };
 

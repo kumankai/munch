@@ -1,8 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { userService } from '../services/userService';
 import { recipeService } from '../services/recipeService';
-import { User } from '../types/user';
-import { RecipeData } from '../types/recipe';
+import { User, RecipeData } from '../types';
 
 interface UserContextType {
     user: User | null;
@@ -24,15 +23,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             try {
                 const accessToken = localStorage.getItem('accessToken');
                 if (accessToken) {
-                    // Fetch user data if token exists
                     const { user: userData } = await userService.getCurrentUser();
                     setUser(userData);
 
-                    // Fetch saved recipes
                     const recipes = await recipeService.getUserRecipes();
-                    if (recipes && Array.isArray(recipes)) {
-                        setSavedRecipes(recipes);
-                    }
+                    setSavedRecipes(Array.isArray(recipes) ? recipes : []);
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
@@ -48,12 +43,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     return (
-        <UserContext.Provider value={{ 
-            user, 
-            setUser, 
-            savedRecipes, 
-            setSavedRecipes, 
-            loading 
+        <UserContext.Provider value={{
+            user,
+            setUser,
+            savedRecipes,
+            setSavedRecipes,
+            loading
         }}>
             {children}
         </UserContext.Provider>

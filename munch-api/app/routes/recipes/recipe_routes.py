@@ -26,9 +26,7 @@ def create_recipe():
     import json
     try:
         recipe_data = request.get_json()
-        #print(json.dumps(recipe_data, indent=4, sort_keys=True))
         recipe: dict = RecipeService.create_recipe(recipe_data['main'])
-        print(json.dumps(recipe, indent=4, sort_keys=True))
         IngredientService.save_all_ingredients(recipe['id'], recipe_data['ingredients'])
         return jsonify({ 'recipe': recipe }), 201 
     except KeyError as e:

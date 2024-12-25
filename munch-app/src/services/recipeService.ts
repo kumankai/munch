@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../api/config';
-import { RecipeData, RecipeDto, RecipeResponse, IngredientDto } from '../types';
+import { RecipeDto, RecipeResponse, IngredientDto, RecipeDataResponse } from '../types';
 
 interface CreateRecipePayload {
     main: RecipeDto;
@@ -9,7 +9,7 @@ interface CreateRecipePayload {
 
 export const recipeService = {
     async getUserRecipes() {
-        const response = await axios.get<RecipeData[]>(`${API_BASE_URL}/recipes/all`, {
+        const response = await axios.get<RecipeDataResponse>(`${API_BASE_URL}/recipes/all`, {
             withCredentials: true
         })
         return response.data;

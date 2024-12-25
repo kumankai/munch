@@ -1,8 +1,27 @@
+import { useEffect } from 'react';
 import { useUser } from '../../context/UserContext'
+import { recipeService } from '../../services/recipeService'
 import '../../styles/Profile.css'
 
 const Profile = () => {
-    const { user, savedRecipes } = useUser()
+    const { user, savedRecipes, setSavedRecipes } = useUser()
+
+    useEffect(() => {
+        const fetchSavedRecipes = async () => {
+            try {
+                const response = await recipeService.getUserRecipes();
+                console.log(response);
+                const recipes = response?.recipes || [];
+                setSavedRecipes(Array.isArray(recipes) ? recipes : []);
+            } catch (error) {
+                console.error('Error fetching saved recipes:', error)
+            }
+        }
+
+        if (user) {
+            fetchSavedRecipes()
+        }
+    }, [user, setSavedRecipes])
 
     return (
         <div className="profile-container">
