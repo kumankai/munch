@@ -3,6 +3,7 @@ import '../../styles/Navbar.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { authService } from '../../services/authService'
+import logo from '../../assets/logo.svg';
 
 const Navbar = () => {
     const navigate = useNavigate()
@@ -37,8 +38,13 @@ const Navbar = () => {
 
     return (
         <nav className="navbar">
-            <div className="nav-brand">
-                <Link to="/">Munch</Link>
+            <div 
+                className="brand" 
+                onClick={() => navigate('/')}
+                style={{ cursor: 'pointer' }}
+            >
+                <img src={logo} alt="Munch Logo" className="brand-logo" />
+                <span className="brand-name">Munch</span>
             </div>
             <div className="left-links">
                 <Link to="/search">Search</Link>
