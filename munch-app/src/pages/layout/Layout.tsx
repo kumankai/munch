@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import Navbar from './Navbar'
+import Navbar from '../../components/Navbar'
 import Home from '../Home'
 import Search from '../recipe/Search'
 import Login from '../auth/Login'

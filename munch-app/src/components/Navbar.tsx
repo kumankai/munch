@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import '../../styles/Navbar.css'
+import './Navbar.css'
 import { Link, useNavigate } from 'react-router-dom'
-import { useUser } from '../../context/UserContext'
-import { authService } from '../../services/authService'
-import logo from '../../assets/logo.svg';
+import { useUser } from '../context/UserContext'
+import { authService } from '../services/authService'
+import logo from '../assets/logo.svg';
 
 const Navbar = () => {
     const navigate = useNavigate()

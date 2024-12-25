@@ -21,7 +21,7 @@ const Details = () => {
             setSavedRecipes(savedRecipes.filter(r => r.id !== recipe.id));
             toast.success('Recipe deleted successfully!');
             navigate('/profile');
-        } catch (error) {
+        } catch {
             toast.error('Failed to delete recipe');
         }
     };
