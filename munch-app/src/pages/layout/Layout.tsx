@@ -10,13 +10,15 @@ import ProtectedRoutes from '../../utils/ProtectedRoutes'
 import NotFound from '../NotFound'
 import Profile from '../user/Profile'
 import Settings from '../user/Settings'
-import Details from '../recipe/Details'
+import SearchDetails from '../recipe/SearchDetails'
 
 function Layout() {
   const location = useLocation()
-  const showNavbarRoutes = ['/', '/search', '/add-recipe', '/login', '/signup', '/profile', '/settings', '/recipe/:id']
+  const showNavbarRoutes = ['/', '/search', '/add-recipe', '/login', '/signup', '/profile', '/settings', '/recipe/search']
 
-  const shouldShowNavbar = showNavbarRoutes.includes(location.pathname)
+  const shouldShowNavbar = showNavbarRoutes.some(route => 
+    location.pathname.startsWith(route)
+  )
 
   return (
     <>
@@ -24,7 +26,7 @@ function Layout() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/recipe/:id" element={<Details />} />
+        <Route path="/recipe/search/:id" element={<SearchDetails />} />
 
         <Route element={<AuthRoutes />}>
           <Route path="/login" element={<Login />} />

@@ -1,42 +1,24 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { recipeService } from '../../services/recipeService';
-import { RecipeAPIReponse } from '../../types';
+import { useLocation } from 'react-router-dom';
+import { RecipeAPIResponse } from '../../types';
 import '../../styles/Details.css';
 
-const Details = () => {
-    const { id } = useParams<{ id: string }>();
-    const [recipe, setRecipe] = useState<RecipeAPIReponse | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+const SearchDetails = () => {
+    const { state } = useLocation();
+    const recipe: RecipeAPIResponse = state?.recipe;
 
-    useEffect(() => {
-        const fetchRecipe = async () => {
-            try {
-                if (!id) return;
-                setLoading(true);
-                const data = await recipeService.getRecipeByRecipeId(parseInt(id));
-                setRecipe(data);
-            } catch (err) {
-                setError('Failed to load recipe');
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchRecipe();
-    }, [id]);
-
-    if (loading) return <div className="loading">Loading...</div>;
-    if (error) return <div className="error">{error}</div>;
     if (!recipe) return <div className="error">Recipe not found</div>;
+
+    // Convert YouTube URL to embed URL
+    const getYoutubeEmbedUrl = (url: string) => {
+        const videoId = url.split('v=')[1];
+        return `https://www.youtube.com/embed/${videoId}`;
+    };
 
     // Get all ingredients and measures
     const ingredients = [];
     for (let i = 1; i <= 20; i++) {
-        const ingredient = recipe[`strIngredient${i}` as keyof RecipeAPIReponse];
-        const measure = recipe[`strMeasure${i}` as keyof RecipeAPIReponse];
+        const ingredient = recipe[`strIngredient${i}` as keyof RecipeAPIResponse];
+        const measure = recipe[`strMeasure${i}` as keyof RecipeAPIResponse];
         if (ingredient && ingredient.trim()) {
             ingredients.push(`${measure} ${ingredient}`);
         }
@@ -49,6 +31,18 @@ const Details = () => {
                 <div className="recipe-info">
                     <h1>{recipe.strMeal}</h1>
                     <p className="category">{recipe.strCategory} • {recipe.strArea}</p>
+                    {recipe.strYoutube && (
+                        <div className="video-container">
+                            <iframe
+                                width="100%"
+                                height="315"
+                                src={getYoutubeEmbedUrl(recipe.strYoutube)}
+                                title="Recipe Video"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -73,4 +67,4 @@ const Details = () => {
     );
 };
 
-export default Details;
+export default SearchDetails;

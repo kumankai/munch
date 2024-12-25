@@ -1,10 +1,11 @@
-export interface RecipeAPIReponse {
+export interface RecipeAPIResponse {
     idMeal: string;
     strMeal: string;
     strInstructions: string;
     strMealThumb: string;
     strArea: string;
     strCategory: string;
+    strYoutube: string;
     strIngredient1?: string;
     strIngredient2?: string;
     strIngredient3?: string;

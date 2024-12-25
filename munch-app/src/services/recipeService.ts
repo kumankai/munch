@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../api/config';
-import { RecipeData, RecipeUpdateData, RecipeAPIReponse } from '../types';
+import { RecipeData, RecipeUpdateData, RecipeAPIResponse } from '../types';
 
 interface RecipeResponse {
-    recipes: RecipeAPIReponse[];
+    recipes: RecipeAPIResponse[];
 }
 
 export const recipeService = {
