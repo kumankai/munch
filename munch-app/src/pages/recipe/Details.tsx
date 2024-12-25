@@ -1,5 +1,8 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { RecipeData, IngredientData } from '../../types';
+import { recipeService } from '../../services/recipeService';
+import { useUser } from '../../context/UserContext';
+import { toast } from 'react-toastify';
 import '../../styles/Details.css';
 
 interface RecipeWithIngredients extends RecipeData {
@@ -8,7 +11,20 @@ interface RecipeWithIngredients extends RecipeData {
 
 const Details = () => {
     const { state } = useLocation();
+    const navigate = useNavigate();
+    const { savedRecipes, setSavedRecipes } = useUser();
     const recipe: RecipeWithIngredients = state?.recipe;
+
+    const handleDelete = async () => {
+        try {
+            await recipeService.deleteRecipe(recipe.id);
+            setSavedRecipes(savedRecipes.filter(r => r.id !== recipe.id));
+            toast.success('Recipe deleted successfully!');
+            navigate('/profile');
+        } catch (error) {
+            toast.error('Failed to delete recipe');
+        }
+    };
 
     const handlePrint = () => {
         window.print();
@@ -62,6 +78,12 @@ const Details = () => {
             </div>
 
             <div className="recipe-actions">
+                <button 
+                    className="action-button delete-button"
+                    onClick={handleDelete}
+                >
+                    Delete Recipe
+                </button>
                 <button 
                     className="action-button print-button"
                     onClick={handlePrint}

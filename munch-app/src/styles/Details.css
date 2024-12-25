@@ -206,4 +206,13 @@
     * {
         color: black !important;  /* Force black text for printing */
     }
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
 } 
