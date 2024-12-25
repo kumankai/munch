@@ -115,6 +115,12 @@ const Search = () => {
                 {error && <p className="error">{error}</p>}
             </div>
 
+            {recipes.length > 0 && (
+                <h2 className="results-count">
+                    {recipes.length} {recipes.length === 1 ? 'Recipe' : 'Recipes'} Found
+                </h2>
+            )}
+
             <div className="recipes-grid">
                 {recipes.map((recipe: RecipeAPIResponse) => (
                     <div 

@@ -131,4 +131,10 @@
 .recipe-card p {
     margin: 0 1rem 1rem;
     color: #666;
+}
+
+.results-count {
+    color: white;
+    margin: 2rem 0 1rem;
+    font-size: 1.2rem;
 } 
