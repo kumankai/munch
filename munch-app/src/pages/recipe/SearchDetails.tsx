@@ -1,13 +1,64 @@
 import { useLocation } from 'react-router-dom';
-import { RecipeAPIResponse } from '../../types';
+import { RecipeAPIResponse, RecipeDto } from '../../types';
+import { recipeService } from '../../services/recipeService';
+import { useUser } from '../../context/UserContext';
 import '../../styles/Details.css';
 
 const SearchDetails = () => {
     const { state } = useLocation();
+    const { user } = useUser();
     const recipe: RecipeAPIResponse = state?.recipe;
 
     const handlePrint = () => {
         window.print();
+    };
+
+    const handleSave = async () => {
+        if (!user) return;
+
+        // Get all non-empty ingredients
+        const ingredients = [];
+        for (let i = 1; i <= 20; i++) {
+            const ingredient = recipe[`strIngredient${i}` as keyof RecipeAPIResponse];
+            const measure = recipe[`strMeasure${i}` as keyof RecipeAPIResponse];
+        
+            if (ingredient && ingredient.trim()) {
+                let quantity = 0;
+                let unit = '';
+        
+                if (measure && measure.trim()) {
+                    const parts = measure.trim().split(' ');
+                    quantity = parseFloat(parts[0]) || 0;
+                    unit = parts.slice(1).join(' ') || '';
+                }
+        
+                ingredients.push({
+                    name: ingredient.trim(),
+                    quantity,
+                    unit
+                });
+            }
+        }
+
+        try {
+            const recipeData = {
+                main: {
+                    title: recipe.strMeal,
+                    instructions: recipe.strInstructions,
+                    author: 'TheMealDB',
+                    image_url: recipe.strMealThumb,
+                    user_id: user.id
+                } as RecipeDto,
+                ingredients: ingredients
+            };
+
+            await recipeService.createRecipe(recipeData);
+            // TODO: Add success notification
+            console.log('Recipe saved successfully');
+        } catch (error) {
+            // TODO: Add error notification
+            console.error('Failed to save recipe:', error);
+        }
     };
 
     if (!recipe) return <div className="error">Recipe not found</div>;
@@ -71,8 +122,8 @@ const SearchDetails = () => {
             <div className="recipe-actions">
                 <button 
                     className="action-button save-button" 
-                    onClick={() => {}} // Placeholder for future save functionality
-                    disabled
+                    onClick={handleSave}
+                    disabled={!user} // Disable if not logged in
                 >
                     Save Recipe
                 </button>

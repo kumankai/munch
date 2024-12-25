@@ -60,13 +60,9 @@ export interface RecipeData {
     image_url: string;
 }
 
-export interface RecipeUpdateData {
+export interface RecipeDto {
     title?: string;
     instructions?: string;
     author?: string;
     image_url?: string;
 }
-
-export interface IngredientsRequest {
-    ingredients: string[];
-} 

@@ -15,17 +15,20 @@ class RecipeService:
     
     @staticmethod
     def create_recipe(recipe_data: dict) -> dict:
-        new_recipe = Recipe(
-            title=recipe_data['title'],
-            instructions=recipe_data['instructions'],
-            author=recipe_data['author'],
-            image_url=recipe_data.get('image_url'),
-            user_id=recipe_data['user_id']
-        )
+        try:
+            new_recipe = Recipe(
+                title=recipe_data['title'],
+                instructions=recipe_data['instructions'],
+                author=recipe_data['author'],
+                image_url=recipe_data.get('image_url'),
+                user_id=recipe_data['user_id']
+            )
 
-        db.session.add(new_recipe)
-        db.session.commit()
-        return new_recipe.to_dict()
+            db.session.add(new_recipe)
+            db.session.commit()
+            return new_recipe.to_dict()
+        except Exception as e:
+            print(e)
     
     @staticmethod
     def update_recipe(recipe_id: int, recipe_data: dict) -> dict:

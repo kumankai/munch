@@ -27,7 +27,8 @@ class IngredientService:
                 ingredient = ingredients[i]
                 ingredient['recipe_id'] = recipe_id
                 IngredientService.save_ingredient(ingredient)
-        except:
+        except Exception as e:
+            print(e)
             return False
         
     @staticmethod

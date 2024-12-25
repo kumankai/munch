@@ -23,15 +23,18 @@ def get_recipe(recipe_id):
 @recipes.route('/recipes/create', methods=['POST'])
 @jwt_required()
 def create_recipe():
+    import json
     try:
         recipe_data = request.get_json()
+        #print(json.dumps(recipe_data, indent=4, sort_keys=True))
         recipe: dict = RecipeService.create_recipe(recipe_data['main'])
+        print(json.dumps(recipe, indent=4, sort_keys=True))
         IngredientService.save_all_ingredients(recipe['id'], recipe_data['ingredients'])
-        return jsonify({ 'recipe': recipe }), 201  # Created
+        return jsonify({ 'recipe': recipe }), 201 
     except KeyError as e:
-        return jsonify({ 'error': 'Invalid recipe data format' }), 400  # Bad Request
+        return jsonify({ 'error': 'Invalid recipe data format' }), 400
     except Exception as e:
-        return jsonify({ 'error': str(e) }), 500  # Internal Server Error
+        return jsonify({ 'error': str(e) }), 500
 
 @recipes.route('/recipes/update/<int:recipe_id>', methods=['POST'])
 @jwt_required()
