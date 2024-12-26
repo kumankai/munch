@@ -8,9 +8,10 @@ from app.middleware.cors_handler import handle_options
 from app.routes.recipes import recipes
 from app.routes.user import user
 from app.routes.auth import auth
+from app.routes.upload import upload
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='static')
     app.config.from_object(config_class)
     db.init_app(app)
     
@@ -27,6 +28,7 @@ def create_app(config_class=Config):
     app.register_blueprint(recipes, url_prefix='/api')
     app.register_blueprint(user, url_prefix='/api')
     app.register_blueprint(auth, url_prefix='/api')
+    app.register_blueprint(upload, url_prefix='/api')
 
     # Create database tables
     with app.app_context():

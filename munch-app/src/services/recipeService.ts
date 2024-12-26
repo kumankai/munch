@@ -55,6 +55,20 @@ export const recipeService = {
             withCredentials: true
         });
         return response.data;
-    }
+    },
 
+    async uploadImage(formData: FormData): Promise<string> {
+        try {
+            const response = await axios.post(`${API_BASE_URL}/upload/recipe_image`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                withCredentials: true
+            });
+            return response.data.image_url;
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            throw error;
+        }
+    }
 }

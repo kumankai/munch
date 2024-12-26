@@ -1,0 +1,139 @@
+.add-recipe-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    color: white;
+}
+
+.add-recipe-container h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.add-recipe-form {
+    background: #2a2a2a;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: white;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: #1a1a1a;
+    border: 1px solid #404040;
+    border-radius: 4px;
+    color: white;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.ingredients-section {
+    margin-top: 2rem;
+}
+
+.ingredients-section h2 {
+    margin-bottom: 1rem;
+}
+
+.ingredient-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.ingredient-row input {
+    background: #1a1a1a;
+    border: 1px solid #404040;
+    padding: 0.75rem;
+    border-radius: 4px;
+    color: white;
+}
+
+.add-ingredient,
+.remove-ingredient {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.add-ingredient {
+    background-color: #28a745;
+    color: white;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.add-ingredient:hover {
+    background-color: #218838;
+}
+
+.remove-ingredient {
+    background-color: #dc3545;
+    color: white;
+    white-space: nowrap;
+}
+
+.remove-ingredient:hover {
+    background-color: #c82333;
+}
+
+.submit-button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 2rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* File input styling */
+input[type="file"] {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+input[type="file"]::file-selector-button {
+    background-color: #6c757d;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 1rem;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #5a6268;
+} 
