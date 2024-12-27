@@ -1,5 +1,6 @@
 from flask import make_response, jsonify, request
 from flask_jwt_extended import create_access_token, create_refresh_token, decode_token, get_jwt
+from app.utils.user_checker import check_username, check_password
 from app.extensions import db
 from app.services.user_service import UserService
 from app.services.token_service import TokenService
@@ -21,7 +22,7 @@ class AuthService:
                 return None
             
             user: User = User.query.filter_by(username=username).first()
-            if not user or not AuthService.check_password(user.password, input_password):
+            if not user or not check_password(user.password, input_password):
                 return None
 
             # Check for existing valid session
@@ -44,7 +45,7 @@ class AuthService:
     @staticmethod
     def register(user_data: User) -> Optional[dict]:
         try:
-            if AuthService.check_username(user_data['username']):
+            if check_username(user_data['username']):
                 return None
 
             # Hash password
@@ -127,14 +128,3 @@ class AuthService:
         except Exception as e:
             print(f"Refresh error: {str(e)}")
             return None
-
-    @staticmethod
-    def check_username(username: str) -> bool:
-        usernames = [user[0] for user in User.query.with_entities(User.username).all()]
-        return username in usernames
-    
-    @staticmethod
-    def check_password(password: str, input_password: str) -> bool:
-        hashed_input = hashlib.sha256()
-        hashed_input.update(input_password.encode())
-        return password == hashed_input.hexdigest()

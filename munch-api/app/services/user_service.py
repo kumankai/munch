@@ -1,3 +1,4 @@
+from app.utils.user_checker import check_password
 from app.models.user import User
 from app.extensions import db
 
@@ -20,7 +21,11 @@ class UserService:
     @staticmethod
     def update_user(user_id: int, user_data: dict) -> dict:
         user: User = User.query.get(user_id)
-        if not user: return None
+        if not user:
+            return { 'message': 'User not found' }
+        if not check_password(user.password, user_data['old_password']):
+            return None
+        
 
         user.username = user_data.get('username', user.username)
         user.password = user_data.get('password', user.password)
