@@ -9,5 +9,6 @@ export interface ApiError {
 } 
 
 export interface UpdateError {
-    message: string;
+    message?: string;
+    error?: string;
 }

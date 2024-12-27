@@ -1,11 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { userService } from '../../services/userService';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import { useUser } from '../../context/UserContext';
 import '../../styles/Settings.css';
 import { UpdateError } from '../../types';
 
 const Settings = () => {
+    const navigate = useNavigate();
+    const { setUser } = useUser();
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -36,6 +40,28 @@ const Settings = () => {
                 toast.error(axiosError.response.data.message);
             } else {
                 toast.error('Failed to update password');
+            }
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        const confirmed = window.confirm(
+            'Are you sure you want to delete your account? This action cannot be undone.'
+        );
+
+        if (confirmed) {
+            try {
+                await userService.deleteUser();
+                setUser(null);
+                toast.success('Account deleted successfully');
+                navigate('/');
+            } catch (error) {
+                const axiosError = error as AxiosError<UpdateError>;
+                if (axiosError.response?.status === 401) {
+                    toast.error(axiosError.response.data.message);
+                } else {
+                    toast.error('Failed to delete account');
+                }
             }
         }
     };
@@ -78,6 +104,15 @@ const Settings = () => {
                             Update Password
                         </button>
                     </form>
+                </div>
+                
+                <div className="delete-account-section">
+                    <button 
+                        onClick={handleDeleteAccount}
+                        className="delete-account-button"
+                    >
+                        Delete Account
+                    </button>
                 </div>
             </div>
         </div>

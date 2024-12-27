@@ -1,7 +1,11 @@
 from app.utils.user_checker import check_password
 from app.utils.hash_helper import hash_password
+from app.services.recipe_service import RecipeService
+from app.services.ingredient_service import IngredientService
 from app.models.user import User
+from app.models.recipe import Recipe
 from app.extensions import db
+from typing import List
 
 class UserService:
     @staticmethod
@@ -29,7 +33,7 @@ class UserService:
 
         if 'password' in user_data:
             user.password = hash_password(user_data['password'])
-            
+
         user.username = user_data.get('username', user.username)
 
         db.session.commit()
@@ -37,8 +41,13 @@ class UserService:
 
     @staticmethod
     def delete_user(user_id: int) -> bool:
-        user = User.query.get(user_id)
+        user: User = User.query.get(user_id)
         if not user: return None
+        recipes: List[dict] = RecipeService.get_all_recipes_by_user_id(user.id)
+        for recipe in recipes:
+            IngredientService.delete_ingredients_by_recipe_id(recipe['id'])
+        RecipeService.delete_all_recipes_by_user_id(user.id)
+
         db.session.delete(user)
         db.session.commit()
         return True

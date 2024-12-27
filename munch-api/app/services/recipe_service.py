@@ -52,3 +52,16 @@ class RecipeService:
         db.session.delete(recipe)
         db.session.commit()
         return True
+    
+    @staticmethod
+    def delete_all_recipes_by_user_id(user_id: int) -> bool:
+        try:
+            recipes: List[Recipe] = [recipe for recipe in Recipe.query.filter_by(user_id=user_id).all()]
+            if not recipes: return False
+
+            for recipe in recipes:
+                db.session.delete(recipe)
+
+            return True
+        except:
+            return False
