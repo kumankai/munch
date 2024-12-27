@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../api/config';
-import { UserUpdateData } from '../types';
+import { UserUpdatePassword } from '../types';
 
 export const userService = {
     async getCurrentUser() {
@@ -10,7 +10,7 @@ export const userService = {
         return response.data;
       },
     
-    async updateUser(data: UserUpdateData) {
+    async updatePassword(data: UserUpdatePassword) {
         const response = await axios.put(`${API_BASE_URL}/user/update`, data, {
             withCredentials: true
         });

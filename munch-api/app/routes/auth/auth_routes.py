@@ -39,7 +39,7 @@ def logout():
 def refresh():
     try:
         refresh_token = request.cookies.get('refresh_token_cookie')
-        refresh_token = refresh_token.encode('utf-8')
+        refresh_token = refresh_token.encode()
 
         decoded_token = decode_token(refresh_token)
         user_id = decoded_token.get('sub')

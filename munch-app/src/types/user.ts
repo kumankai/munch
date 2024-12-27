@@ -3,7 +3,7 @@ export interface User {
     username: string;
 }
 
-export interface UserUpdateData {
-    username?: string;
+export interface UserUpdatePassword {
     password?: string;
+    old_password?: string;
 } 

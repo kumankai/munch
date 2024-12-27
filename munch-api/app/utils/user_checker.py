@@ -1,4 +1,5 @@
 from app.models.user import User
+from app.utils.hash_helper import hash_password
 import hashlib
 
 def check_username(username: str) -> bool:
@@ -6,6 +7,5 @@ def check_username(username: str) -> bool:
     return username in usernames
 
 def check_password(password: str, input_password: str) -> bool:
-    hashed_input = hashlib.sha256()
-    hashed_input.update(input_password.encode())
-    return password == hashed_input.hexdigest()
+    hashed_input = hash_password(input_password)
+    return password == hashed_input

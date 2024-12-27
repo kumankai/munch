@@ -1,4 +1,5 @@
 from app.utils.user_checker import check_password
+from app.utils.hash_helper import hash_password
 from app.models.user import User
 from app.extensions import db
 
@@ -25,10 +26,11 @@ class UserService:
             return { 'message': 'User not found' }
         if not check_password(user.password, user_data['old_password']):
             return None
-        
 
+        if 'password' in user_data:
+            user.password = hash_password(user_data['password'])
+            
         user.username = user_data.get('username', user.username)
-        user.password = user_data.get('password', user.password)
 
         db.session.commit()
         return user.to_dict()

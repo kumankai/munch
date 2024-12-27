@@ -29,6 +29,6 @@ def update():
     updated_user = UserService.update_user(user_id, user_data)
     if not updated_user:
         return jsonify({ 'message': 'Incorrect password' }), 401
-    if 'user' not in updated_user:
+    if 'user' in updated_user:
         return jsonify({ 'error': 'User not found' }), 404
     return jsonify({ 'user': updated_user }), 200

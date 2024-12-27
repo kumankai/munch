@@ -7,3 +7,7 @@ export interface ApiError {
     };
     message: string;
 } 
+
+export interface UpdateError {
+    message: string;
+}
