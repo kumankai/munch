@@ -40,7 +40,7 @@ def create_recipe():
     except Exception as e:
         return jsonify({ 'error': str(e) }), 500
 
-@recipes.route('/recipes/update/<int:recipe_id>', methods=['POST'])
+@recipes.route('/recipes/update/<int:recipe_id>', methods=['PUT'])
 @jwt_required()
 def update_recipe(recipe_id):
     recipe_data = request.get_json()

@@ -1,11 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../api/config';
-import { RecipeDto, RecipeResponse, IngredientDto, RecipeDataResponse } from '../types';
-
-interface CreateRecipePayload {
-    main: RecipeDto;
-    ingredients: IngredientDto[];
-}
+import { RecipeData, RecipeDataResponse, RecipesAPIResponse, RecipePayload } from '../types';
 
 export const recipeService = {
     async getUserRecipes() {
@@ -27,8 +22,8 @@ export const recipeService = {
         return response.data;
     },
 
-    async getRecipesByIngredients(ingredients: string[]): Promise<RecipeResponse> {
-        const response = await axios.post<RecipeResponse>(
+    async getRecipesByIngredients(ingredients: string[]): Promise<RecipesAPIResponse> {
+        const response = await axios.post<RecipesAPIResponse>(
             `${API_BASE_URL}/recipes/search`,
             { ingredients },
             { withCredentials: true }
@@ -36,15 +31,15 @@ export const recipeService = {
         return response.data;
     },
 
-    async createRecipe(data: CreateRecipePayload) {
+    async createRecipe(data: RecipePayload) {
         const response = await axios.post(`${API_BASE_URL}/recipes/create`, data, {
             withCredentials: true
         });
         return response.data;
     },
 
-    async updateRecipe(id: number, data: RecipeDto) {
-        const response = await axios.put(`${API_BASE_URL}/recipes/update/${id}`, data, {
+    async updateRecipe(recipeId: number, data: RecipePayload): Promise<RecipeData> {
+        const response = await axios.put(`${API_BASE_URL}/recipes/update/${recipeId}`, data, {
             withCredentials: true
         });
         return response.data;

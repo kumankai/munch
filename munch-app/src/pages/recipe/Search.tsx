@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { recipeService } from '../../services/recipeService';
-import { RecipeAPIResponse, RecipeResponse } from '../../types';
+import { RecipeAPIResponse, RecipesAPIResponse } from '../../types';
 import '../../styles/Search.css';
 
 const Search = () => {
@@ -54,7 +54,7 @@ const Search = () => {
         try {
             setLoading(true);
             setError('');
-            const response: RecipeResponse = await recipeService.getRecipesByIngredients(ingredients);
+            const response: RecipesAPIResponse = await recipeService.getRecipesByIngredients(ingredients);
             setRecipes(response.recipes);
             // Immediately save to localStorage after setting new recipes
             localStorage.setItem('searchResults', JSON.stringify(response.recipes));

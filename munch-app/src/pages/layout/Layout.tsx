@@ -15,6 +15,7 @@ import Settings from '../user/Settings'
 import SearchDetails from '../recipe/SearchDetails'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Edit from '../recipe/Edit'
 
 function Layout() {
   const location = useLocation()
@@ -49,6 +50,7 @@ function Layout() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/recipe/details/:id" element={<Details />} />
+          <Route path="/recipe/edit/:id" element={<Edit />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

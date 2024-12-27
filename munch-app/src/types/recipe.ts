@@ -1,4 +1,6 @@
-export interface RecipeResponse {
+import { IngredientDto } from "./ingredient";
+
+export interface RecipesAPIResponse {
     recipes: RecipeAPIResponse[];
 }
 
@@ -71,4 +73,9 @@ export interface RecipeDto {
     author?: string;
     image_url?: string;
     youtube_url?: string;
+}
+
+export interface RecipePayload {
+    main: RecipeDto;
+    ingredients: IngredientDto[];
 }

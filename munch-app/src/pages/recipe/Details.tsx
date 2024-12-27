@@ -79,6 +79,12 @@ const Details = () => {
 
             <div className="recipe-actions">
                 <button 
+                    className="action-button edit-button"
+                    onClick={() => navigate(`/recipe/edit/${recipe.id}`, { state: { recipe } })}
+                >
+                    Edit Recipe
+                </button>
+                <button 
                     className="action-button delete-button"
                     onClick={handleDelete}
                 >
