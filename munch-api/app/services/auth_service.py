@@ -112,7 +112,7 @@ class AuthService:
             # Blacklist the old access token if provided
             if old_access_token:
                 try:
-                    token_data = decode_token(old_access_token, verify=False)
+                    token_data = decode_token(old_access_token, allow_expired=True)
                     
                     TokenService.blacklist(token_data)
                 except Exception as e:
