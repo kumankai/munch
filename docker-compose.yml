@@ -45,7 +45,7 @@ services:
       - munch-network
     depends_on:
       - db
-      
+
   nginx:
     container_name: nginx
     image: jonasal/nginx-certbot
@@ -63,6 +63,7 @@ services:
 
 volumes:
   postgres_data:
+  nginx_secrets:
 
 networks:
   munch-network:
