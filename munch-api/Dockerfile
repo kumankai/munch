@@ -6,9 +6,7 @@ WORKDIR /app
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    FLASK_APP=main.py \
-    FLASK_ENV=production
+    PYTHONUNBUFFERED=1
 
 # Install system dependencies
 RUN apt-get update \
@@ -29,4 +27,4 @@ COPY . .
 EXPOSE 4000
 
 # Run the application
-CMD ["flask", "run", "--host=0.0.0.0"] 
+CMD ["gunicorn", "--bind", "0.0.0.0:4000", "server:app"] 

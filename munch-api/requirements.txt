@@ -1,9 +1,11 @@
 requests
 flask
-"flask[async]"
+flask[async]
 flask-sqlalchemy
 flask-migrate
 flask-jwt-extended
+flask-cors
 python-dotenv
 psycopg2-binary
 aiohttp
+gunicorn
