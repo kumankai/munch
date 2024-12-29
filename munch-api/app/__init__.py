@@ -20,7 +20,7 @@ def create_app(config_class=Config):
 
     register_jwt_callbacks(jwt)
 
-    CORS(app, resources={r"/api/*": {"origins": ["http://localhost", "http://localhost:3000", "http://localhost:5173"]}}, supports_credentials=True)
+    CORS(app, resources={r"/api/*": {"origins": ["http://localhost", "http://localhost:3000", "http://localhost:5173", "https://youamunch.duckdns.org"]}}, supports_credentials=True)
 
     #app.before_request(handle_options)
 
