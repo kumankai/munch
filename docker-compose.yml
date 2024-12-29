@@ -60,6 +60,8 @@ services:
       - ./user_conf.d:/etc/nginx/user_conf.d
     depends_on:
       - munch
+    networks:
+      - munch-network
 
 volumes:
   postgres_data:
