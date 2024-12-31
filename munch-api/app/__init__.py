@@ -13,6 +13,7 @@ from app.routes.upload import upload
 def create_app(config_class=Config):
     app = Flask(__name__, static_folder='static')
     app.config.from_object(config_class)
+    app.config['PREFERRED_URL_SCHEME'] = 'https'
     db.init_app(app)
     
     app.config['JWT_SECRET_KEY'] = app.config['JWT_ACCESS_TOKEN_SECRET_KEY']
