@@ -10,6 +10,7 @@ RUN npm install
 COPY . .
 
 # Build the app
+ENV NODE_ENV=production
 RUN npm run build
 
 # Install serve to run the production build
