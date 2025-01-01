@@ -14,7 +14,7 @@ export const authService = {
   },
 
   async signup(data: SignupData) {
-    const response = await axios.post(`${API_BASE_URL}/auth/signup/`, data, {
+    const response = await axios.post(`${API_BASE_URL}/auth/signup`, data, {
       withCredentials: true
     });
     if (response.data.access_token) {
