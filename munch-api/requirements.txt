@@ -9,3 +9,4 @@ python-dotenv
 psycopg2-binary
 aiohttp
 gunicorn
+pytest

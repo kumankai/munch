@@ -9,7 +9,7 @@ def login():
         result = AuthService.login(request.get_json())
         if not result:
             return jsonify({'error': 'Invalid credentials'}), 401
-        return result
+        return result, 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -21,7 +21,7 @@ def signup():
         if not result:
             return jsonify({ 'error': 'Username already exists' }), 409
         
-        return result
+        return result, 201
     except Exception as e:
         return jsonify({ 'error': str(e) }), 500
 
@@ -31,7 +31,7 @@ def logout():
     try:
         access_token = get_jwt()
         refresh_token = decode_token(request.cookies.get('refresh_token'))
-        return AuthService.logout(access_token, refresh_token)
+        return AuthService.logout(access_token, refresh_token), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     

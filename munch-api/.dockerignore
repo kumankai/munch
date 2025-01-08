@@ -53,6 +53,7 @@ postgres_data/
 .tox/
 .pytest_cache/
 htmlcov/
+tests/
 
 # Documentation
 docs/

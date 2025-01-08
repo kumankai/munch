@@ -15,7 +15,7 @@ isSecure = True if os.getenv('FLASK_ENV') == 'production' else False
 
 class AuthService:
     @staticmethod
-    def login(user_data: dict) -> Optional[tuple]:
+    def login(user_data: dict) -> Optional[dict]:
         try:
             username, input_password = user_data['username'], user_data['password']
             if not username or not input_password:
@@ -43,7 +43,7 @@ class AuthService:
             return None
     
     @staticmethod
-    def register(user_data: User) -> Optional[dict]:
+    def register(user_data: dict) -> Optional[dict]:
         try:
             if check_username(user_data['username']):
                 return None
@@ -71,7 +71,7 @@ class AuthService:
             # Remove refresh token cookie
             response.delete_cookie('refresh_token')
             
-            return response, 200
+            return response
         except Exception as e:
             print(f"Logout error: {str(e)}")
             db.session.rollback()
@@ -101,7 +101,7 @@ class AuthService:
                     max_age=30 * 24 * 60 * 60  # 30 days
                 )
 
-                return response, 200
+                return response
             except Exception as e:
                 print(f"Authorization error: {str(e)}")
                 return jsonify({'error': str(e)}), 500
