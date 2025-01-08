@@ -10,6 +10,7 @@ jobs:
     name: Run Tests
     env:
       TESTING: true
+      FLASK_ENV: 'testing'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
