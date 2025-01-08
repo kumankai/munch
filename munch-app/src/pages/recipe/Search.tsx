@@ -22,6 +22,7 @@ const Search = () => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [hasSearched, setHasSearched] = useState(false);
 
     // Save to localStorage whenever ingredients or recipes change
     useEffect(() => {
@@ -54,8 +55,9 @@ const Search = () => {
         try {
             setLoading(true);
             setError('');
+            setHasSearched(true);
             const response: RecipesAPIResponse = await recipeService.getRecipesByIngredients(ingredients);
-            setRecipes(response.recipes);
+            setRecipes(response.recipes ?? []);
             // Immediately save to localStorage after setting new recipes
             localStorage.setItem('searchResults', JSON.stringify(response.recipes));
         } catch (err) {
@@ -115,26 +117,29 @@ const Search = () => {
                 {error && <p className="error">{error}</p>}
             </div>
 
-            {recipes.length > 0 && (
-                <h2 className="results-count">
-                    {recipes.length} {recipes.length === 1 ? 'Recipe' : 'Recipes'} Found
-                </h2>
-            )}
-
-            <div className="recipes-grid">
-                {recipes.map((recipe: RecipeAPIResponse) => (
-                    <div 
-                        key={recipe.idMeal} 
-                        className="recipe-card"
-                        onClick={() => handleRecipeClick(recipe)}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <img src={recipe.strMealThumb} alt={recipe.strMeal} />
-                        <h3>{recipe.strMeal}</h3>
-                        <p>{recipe.strArea} • {recipe.strCategory}</p>
+            {recipes.length > 0 ? (
+                <>
+                    <h2 className="results-count">
+                        {recipes.length} {recipes.length === 1 ? 'Recipe' : 'Recipes'} Found
+                    </h2>
+                    <div className="recipes-grid">
+                        {recipes.map((recipe: RecipeAPIResponse) => (
+                            <div 
+                                key={recipe.idMeal} 
+                                className="recipe-card"
+                                onClick={() => handleRecipeClick(recipe)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <img src={recipe.strMealThumb} alt={recipe.strMeal} />
+                                <h3>{recipe.strMeal}</h3>
+                                <p>{recipe.strArea} • {recipe.strCategory}</p>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </>
+            ) : (
+                hasSearched && !loading && <p className="no-recipes">No recipes found. Try different ingredients.</p>
+            )}
         </div>
     );
 };

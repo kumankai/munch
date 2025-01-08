@@ -1,7 +1,7 @@
 import { IngredientDto } from "./ingredient";
 
 export interface RecipesAPIResponse {
-    recipes: RecipeAPIResponse[];
+    recipes?: RecipeAPIResponse[];
 }
 
 export interface RecipeAPIResponse {
@@ -64,7 +64,7 @@ export interface RecipeData {
 }
 
 export interface RecipeDataResponse {
-    recipes: RecipeData[];
+    recipes?: RecipeData[];
 }
 
 export interface RecipeDto {
