@@ -26,4 +26,6 @@ jobs:
         run: python3-virtualenv/bin/pip install -r munch-api/requirements.txt
 
       - name: Run Tests
-        run: pytest munch-api/tests/ -v
+        run: |
+            source python3-virtualenv/bin/activate
+            pytest munch-api/tests/ -v
