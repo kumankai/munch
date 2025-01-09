@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get the current timestamp in the format PostgreSQL expects
-CURRENT_TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+CURRENT_TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S')
 
 SQL_COMMAND="DELETE FROM $TABLE_NAME WHERE expires_at < '$CURRENT_TIMESTAMP';"
 
