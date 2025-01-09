@@ -15,7 +15,7 @@ const Profile = () => {
             try {
                 const response = await recipeService.getUserRecipes();
                 const recipesWithIngredients = await Promise.all(
-                    response.recipes.map(async (recipe: RecipeData) => {
+                    (response.recipes ?? []).map(async (recipe:RecipeData) => {
                         const ingredientsResponse = await recipeService.getIngredientsByRecipeId(recipe.id);
                         return { ...recipe, ingredients: ingredientsResponse.ingredients };
                     })
@@ -23,6 +23,7 @@ const Profile = () => {
                 setSavedRecipes(recipesWithIngredients);
             } catch (error) {
                 console.error('Error fetching recipes:', error);
+                toast.error('Failed to fetch recipes');
             }
         };
 
