@@ -40,7 +40,7 @@ cd munch
 ```
 
 ### Environment Variables
-Copy and configure it before running:
+Copy and configure it before running the app:
 ```
 cp .env.example .env
 ```
